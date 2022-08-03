@@ -1,26 +1,24 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import './App.less'
+import { Button, Empty, Form, Input, Upload } from 'antd'
+import { CreateFormItem, formItem } from './utils/CreateFormItem'
+import { useRef } from 'react'
+const normFile = (e: any) => {
+	if (Array.isArray(e)) {
+		return e
+	}
+	return e && e.fileList
 }
 
-export default App;
+function App() {
+	localStorage.setItem(
+		'token',
+		'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTk1MTk0MzcsInVzZXJuYW1lIjoiYWRtaW5pc3RyYXRvciJ9.VImMgu6h9CLXxz_6S5umDfCo-NxnXFCYL0Y-Ef3GxMo'
+	)
+
+	return (
+		<>
+			HelloWorld
+		</>
+	)
+}
+export default App

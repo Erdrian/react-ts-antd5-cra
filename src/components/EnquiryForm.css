@@ -1,0 +1,12 @@
+.list-page-content {
+	background-color: #fff;
+	margin: 24px;
+	padding: 24px;
+	width: auto;
+	min-height: 600px;
+}
+.table-search {
+	width: 100%;
+	display: flex;
+	flex-wrap: wrap;
+}

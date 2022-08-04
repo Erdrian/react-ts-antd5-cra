@@ -65,16 +65,8 @@ export default forwardRef<any, MyUploadProps>((props, ref) => {
 		setfileList(fileList)
 		onFileChange?.(fileList)
 	}, [])
-	// 将文件列表传入ref
-	useImperativeHandle(ref, () => fileList, [fileList])
 
-	// useEffect(() => {
-	// 	// if (typeof ref !== 'function' && ref !== null) {
-	// 	// 	console.log('aaa')
-
-	// 	// 	ref.current = fileList
-	// 	// }
-	// }, [fileList])
+	//----------------------------------------  ----------------------------------------
 
 	const onChange: UploadProps['onChange'] = ({ file, fileList }) => {
 		let { status, name } = file
@@ -114,6 +106,9 @@ export default forwardRef<any, MyUploadProps>((props, ref) => {
 		beforeUpload,
 		...props,
 	}
+	//----------------------------------------  ----------------------------------------
+	// 将文件列表传入ref
+	useImperativeHandle(ref, () => fileList, [fileList])
 	return (
 		<Upload {...uploadProps} onChange={onChange} fileList={fileList}>
 			{listType === 'picture-card' ? (

@@ -1,17 +1,11 @@
 import React, { useEffect, useState, forwardRef, useCallback, ReactNode, useImperativeHandle } from 'react'
-import { Table, message, TableProps } from 'antd'
+import { Table, TableProps } from 'antd'
 import history from '../utils/history'
 import fetchJson from '../utils/fetch'
 import SearchForm from './SearchForm'
 import { formItem } from '../utils/CreateFormItem'
 import './EnquiryForm.css'
 
-//api:          接口地址
-//filter_api	  常驻的筛选条件，不是来自搜索区的筛选条件,特定情况下使用，通常不使用
-//auth          接口是否为权限相关专用接口，  Bool
-//searchItem：  搜索区的表单  []
-//content:      搜索区和表格之间的内容    ReactDOM
-//sortRule			排序规则{column,order}
 export type EnquiryFormProps = {
 	api: string
 	filter_api?: { [key: string]: any }
@@ -22,13 +16,11 @@ export type EnquiryFormProps = {
 	tableProps: TableProps<any>
 	detail?: boolean
 }
-export type filterInHistory =
-	| {
-			filter_history: {}
-			page_history: number
-			pageSize_history: number
-	  }
-	| undefined
+export type filterInHistory = {
+	filter_history: {}
+	page_history: number
+	pageSize_history: number
+}
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default forwardRef<any, EnquiryFormProps>((props, ref) => {
@@ -81,12 +73,8 @@ export default forwardRef<any, EnquiryFormProps>((props, ref) => {
 			//排序
 			let sort = sortRule ? `&column=${sortRule.column}&order=${sortRule.order}` : ''
 
-			let { ok, msg, result } = (await fetchJson(
-				`${api}?pageNo=${page}&pageSize=${pageSize}${filterStr}${sort}`
-			)) || { ok: false, msg: '数据返回失败' }
-			if (!ok) {
-				message.error(msg)
-			} else {
+			let { ok, result } = await fetchJson(`${api}?pageNo=${page}&pageSize=${pageSize}${filterStr}${sort}`)
+			if (ok) {
 				let { total, records } = result
 				if (!records) records = result
 				let data = records
@@ -152,9 +140,7 @@ export default forwardRef<any, EnquiryFormProps>((props, ref) => {
 			<div className='table-search'>
 				<SearchForm formItems={searchItems || []} onSearch={onSearch} onReset={onReset} />
 			</div>
-
 			{content}
-
 			{/* 表格 */}
 			<Table {...tableProps} dataSource={_Data} pagination={pagination} loading={isLoading} />
 		</div>

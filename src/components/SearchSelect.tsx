@@ -4,7 +4,7 @@ import { Select, SelectProps } from 'antd'
 export interface SearchSelectProps extends SelectProps {
 	initOption?: []
 	initValue?: string
-	getOptionData?: Function
+	getOptionData?: (currentValue: string, value: string, callback: (data: any) => void) => void
 	onValueChange?: (value: string) => void
 }
 
@@ -56,6 +56,7 @@ const SearchSelect = (props: SearchSelectProps) => {
 			onSearch={handleSearch}
 			onChange={handleChange}
 			options={data}
+			notFoundContent={'暂无数据，请重新输入'}
 		></Select>
 	)
 }

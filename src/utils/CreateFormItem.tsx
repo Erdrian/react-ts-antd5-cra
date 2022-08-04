@@ -17,10 +17,10 @@ import {
 	RadioGroupProps,
 	FormItemProps,
 	TreeSelect,
+	InputNumber,
 } from 'antd'
 import { PasswordProps, TextAreaProps } from 'antd/lib/input'
-import InputNum from '../components/InputNum'
-import MyUpload, { MyUploadProps } from '../components/MyUpload'
+import MyUpload, { MyUploadProps } from '../components/Upload'
 import RichText from '../components/RichText'
 import SearchSelect, { SearchSelectProps } from '../components/SearchSelect'
 const { Item } = Form
@@ -43,7 +43,6 @@ export interface formItem {
 	span?: number
 	group?: formItem[]
 }
-
 // eslint-disable-next-line import/no-anonymous-default-export
 export const CreateFormItem = (formItem: formItem, index?: number) => {
 	if (!formItem) return ''
@@ -54,7 +53,7 @@ export const CreateFormItem = (formItem: formItem, index?: number) => {
 			inputNode = <Input {...inputOptions} />
 			break
 		case 'inputNumber':
-			inputNode = <InputNum {...inputOptions} />
+			inputNode = <InputNumber {...inputOptions} style={{ width: '100%', ...inputOptions?.style }} />
 			break
 		case 'select':
 			inputNode = <Select {...inputOptions} />

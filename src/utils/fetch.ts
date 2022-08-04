@@ -1,4 +1,5 @@
 import { message } from 'antd'
+
 // export const BASE: string = 'http://localhost:8080'
 export const BASE = 'https://devsli.nbmydigit.com/api'
 
@@ -13,10 +14,24 @@ export default async function fetchJson(URL: string, options?: { headers?: {} })
 		}
 		Options = { ...Options, headers: { ...defaultHeaders } }
 		let res = await fetch(BASE + URL, Options)
-		let { success, message, result, code, timestamp } = await res.json()
-		return { ok: success, result, msg: message, code, timestamp }
+		let {
+			success,
+			message: msg,
+			result,
+			code,
+			timestamp,
+		} = (await res.json()) || {
+			success: false,
+			message: '数据解析失败',
+			result: null,
+		}
+		if (!success) {
+			message.error(msg)
+		}
+		return { ok: success, result, msg, code, timestamp }
 	} catch (e) {
 		console.log(e)
-		message.error('服务器连接失败')
+		return { ok: false, message: '服务器连接失败', result: null }
 	}
 }
+ 

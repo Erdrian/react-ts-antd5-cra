@@ -1,0 +1,47 @@
+.content {
+	padding: 32px 0 24px;
+}
+
+.form-login-container {
+	padding: 32px 0 24px;
+}
+.form-login-top {
+	text-align: center;
+}
+.form-login-header {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 44px;
+	line-height: 44px;
+}
+.form-login-logo {
+	position: relative;
+	width: 44px;
+	height: 44px;
+	margin-right: 16px;
+	vertical-align: top;
+}
+.form-login-logo img {
+	width: 100%;
+	z-index: 99;
+}
+
+.form-login-title {
+	position: relative;
+	top: 2px;
+	color: rgba(0, 0, 0, 0.85);
+	font-weight: 600;
+	font-size: 33px;
+}
+.form-login-desc {
+	position: relative;
+	margin-top: 12px;
+	margin-bottom: 44px;
+	color: rgba(0, 0, 0, 0.45);
+	font-size: 14px;
+}
+.form-login-main {
+	width: 328px;
+	margin: 0 auto;
+}

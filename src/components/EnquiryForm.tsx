@@ -24,13 +24,14 @@ export type filterInHistory = {
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default forwardRef<any, EnquiryFormProps>((props, ref) => {
+	//---------------------------------------- props ----------------------------------------
 	let { api, filter_api, searchItems, content, sortRule, tableProps, detail = false } = props
 	let state = history.location.state as filterInHistory
 	let pathname = history.location.pathname
 	const { filter_history, page_history, pageSize_history } = state
 		? state
 		: { filter_history: {}, page_history: 1, pageSize_history: 10 }
-	// state-----------------------------------------------------------
+	//---------------------------------------- state ----------------------------------------
 	const [_Data, set_Data] = useState([])
 	const [isLoading, setIsloading] = useState(false) //  数据是否载入中
 	const [current, setCurrent] = useState(page_history) //  当前页
@@ -38,13 +39,12 @@ export default forwardRef<any, EnquiryFormProps>((props, ref) => {
 	const [filter, setFilter] = useState(filter_history) //  筛选条件
 	const [total, setTotal] = useState<number>(0) //  数据总量
 
-	// effect---------------------------------------------------------
+	//---------------------------------------- effect ----------------------------------------
 	useEffect(() => {
 		getData({ filter, page: current, pageSize })
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
-
-	//  function---------------------------------------------------------
+	//---------------------------------------- 方法 ----------------------------------------
 	// 数据处理，给每个数据加上key
 	const dataProcess = (records: []) => {
 		records.forEach((record: { children?: any; id: number; key?: number }, index: number) => {

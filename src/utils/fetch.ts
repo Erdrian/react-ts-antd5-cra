@@ -3,7 +3,7 @@ import { message } from 'antd'
 // export const BASE: string = 'http://localhost:8080'
 export const BASE = 'https://devsli.nbmydigit.com/api'
 
-export default async function fetchJson(URL: string, options?: { headers?: {} }) {
+export default async function fetchJson(URL: string, options?: RequestInit) {
 	const token: string = localStorage.getItem('token') || ''
 	const headers: {} | undefined = options?.headers
 	try {
@@ -34,4 +34,3 @@ export default async function fetchJson(URL: string, options?: { headers?: {} })
 		return { ok: false, message: '服务器连接失败', result: null }
 	}
 }
- 

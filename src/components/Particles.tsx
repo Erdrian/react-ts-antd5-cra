@@ -7,6 +7,8 @@ const options: ISourceOptions = {
 		color: {
 			value: '#f0f2f5',
 		},
+	image:'url(background.svg)',
+	size:'cover'
 	},
 	fpsLimit: 120,
 	interactivity: {

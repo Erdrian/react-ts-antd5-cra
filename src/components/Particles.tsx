@@ -12,12 +12,12 @@ const options: ISourceOptions = {
 	interactivity: {
 		events: {
 			onClick: {
-				enable: false,
+				enable: true,
 				mode: 'push',
 			},
 			onHover: {
-				enable: false,
-				mode: 'repulse',
+				enable: true,
+				mode: 'attract',
 			},
 			resize: true,
 		},

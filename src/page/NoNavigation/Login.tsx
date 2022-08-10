@@ -1,94 +1,29 @@
-import Particles from 'react-tsparticles'
-import { loadFull } from 'tsparticles'
-import { Engine, ISourceOptions } from 'tsparticles-engine'
-const options: ISourceOptions = {
-	background: {
-		color: {
-			value: '#f5f5f5',
-		},
-		size: 'cover',
-		repeat: 'no-repeat',
-	},
-	fpsLimit: 120,
-	interactivity: {
-		events: {
-			onClick: {
-				enable: false,
-				mode: 'push',
-			},
-			onHover: {
-				enable: false,
-				mode: 'repulse',
-			},
-			resize: true,
-		},
-		modes: {
-			push: {
-				quantity: 4,
-			},
-			repulse: {
-				distance: 200,
-				duration: 0.4,
-			},
-		},
-	},
-	particles: {
-		color: {
-			value: '#bfbfbf',
-		},
-		links: {
-			color: '#bfbfbf',
-			distance: 120,
-			enable: true,
-			opacity: 1,
-			width: 1,
-		},
-		collisions: {
-			enable: true,
-		},
-		move: {
-			direction: 'none',
-			enable: true,
-			outModes: {
-				default: 'bounce',
-			},
-			random: true,
-			speed: 3,
-			straight: false,
-		},
-		number: {
-			density: {
-				enable: true,
-				area: 800,
-			},
-			value: 80,
-		},
-		opacity: {
-			value: 0.5,
-		},
-		shape: {
-			type: 'circle',
-		},
-		size: {
-			value: { min: 1, max: 5 },
-		},
-	},
-	detectRetina: true,
-	zLayers: 1,
-}
+import Particles from '../../components/Particles'
+import NormalLoginForm from '../../components/LoginForm'
+import './Login.css'
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default () => {
-	const particlesInit = async (main: Engine) => {
-		// you can initialize the tsParticles instance (main) here, adding custom shapes or presets
-		// this loads the tsparticles package bundle, it's the easiest method for getting everything ready
-		// starting from v2 you can add only the features you need reducing the bundle size
-		await loadFull(main)
-	}
-
 	return (
 		<>
-			<Particles id='tsparticles' init={particlesInit} options={options} />
+			<Particles />
+			<div className='login-page-top'></div>
+			<div className='content'>
+				<div className='form-login-container'>
+					<div className='form-login-top'>
+						<div className='form-login-header'>
+							<span className='form-login-logo'>
+								<img alt='logo' src='logo.svg' />
+							</span>
+							<span className='form-login-title'>安责险风控平台</span>
+						</div>
+						<div className='form-login-desc'>用户登录</div>
+					</div>
+					<div className='form-login-main'>
+						<NormalLoginForm />
+					</div>
+				</div>
+			</div>
 		</>
 	)
 }

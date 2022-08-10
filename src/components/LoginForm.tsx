@@ -69,7 +69,7 @@ const NormalLoginForm = () => {
 
 		timer_captchaKey = setTimeout(() => {
 			getIdentify()
-		}, 60000)
+		}, 10000)
 		if (EncryptAble) {
 			timer_encryptKey = setTimeout(() => {
 				getKey()
@@ -89,13 +89,15 @@ const NormalLoginForm = () => {
 		let pass = EncryptAble ? encrypt(publicKey, password) : password
 		let { ok, msg, result } = await fetchJson('/sys/login', {
 			method: 'post',
-			body: JSON.stringify({ ...values, captchaKey, password: pass, encryptKey }),
+			body: JSON.stringify({ ...values, checkKey: captchaKey, password: pass, encryptKey }),
 		})
 		setIsloading(false)
 		if (!ok) {
 			if (msg === '登录key失效') {
-				await getKey()
-				onFinish(values)
+				if (EncryptAble) {
+					await getKey()
+					onFinish(values)
+				}
 			} else {
 				setLoginError(msg)
 				getIdentify()
@@ -220,7 +222,7 @@ const NormalLoginForm = () => {
 
 					<img
 						alt='验证码'
-						style={{ width: 'auto', height: '40px', cursor: 'pointer' }}
+						style={{ width: 'auto', height: '39px', cursor: 'pointer' }}
 						src={identify}
 						onClick={() => getIdentify()}
 					/>

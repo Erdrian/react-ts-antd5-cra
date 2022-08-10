@@ -6,14 +6,31 @@ import { UserOutlined, LockOutlined, SafetyCertificateOutlined } from '@ant-desi
 import fetchJson from '../utils/fetch'
 import { MenuPropsFromAuth } from './Menu'
 import './LoginForm.css'
-//----------------------------------------  ----------------------------------------
+import { SizeType } from 'antd/es/config-provider/SizeContext'
+//---------------------------------------- 类型 ----------------------------------------
+interface loginFrom {
+	username: string
+	password: string
+	captcha: string
+}
+interface loginBody extends loginFrom {
+	checkKey: string
+	loginKey?: string
+}
+type areaFromInterface = {
+	id: string
+	name: string
+	level: number
+	sortNo: number
+	parentId: string
+}
+type authFromInterface = {
+	action: string
+	describe: string
+	type?: number
+}
 //获取权限相关
 export const getAuth = async () => {
-	type authFromInterface = {
-		action: string
-		describe: string
-		type?: number
-	}
 	let { ok, msg, result } = await fetchJson('/sys/permission/getUserPermissionByToken?notJeecg=1')
 	if (ok) {
 		let { auth, menu }: { auth: authFromInterface[]; menu: MenuPropsFromAuth[] } = result
@@ -31,24 +48,17 @@ export const getAuth = async () => {
 }
 //获取行政区域
 export const getAera = async () => {
-	type areaFromServer = {
-		id: string
-		name: string
-		level: number
-		sortNo: number
-		parentId: string
-	}
 	let { ok, result } = await fetchJson('/sli/adminDivision/getByParentId?parentId=330200')
 	if (ok) {
 		let localArea = {}
-		result.forEach((item: areaFromServer) => {
+		result.forEach((item: areaFromInterface) => {
 			localArea[item.id] = item.name
 		})
 		localStorage.setItem('localArea', JSON.stringify(localArea))
 	}
 }
 const EncryptAble = false
-const NormalLoginForm = () => {
+const NormalLoginForm = ({ size = 'large' }: { size?: SizeType }) => {
 	//---------------------------------------- props ----------------------------------------
 	const [form] = Form.useForm()
 	const state = history.location.state as { from: string } | undefined
@@ -63,14 +73,13 @@ const NormalLoginForm = () => {
 	//---------------------------------------- effect ----------------------------------------
 	useEffect(() => {
 		getIdentify()
-		getKey()
 		let timer_captchaKey: ReturnType<typeof setTimeout> | null = null
 		let timer_encryptKey: ReturnType<typeof setTimeout> | null = null
-
 		timer_captchaKey = setTimeout(() => {
 			getIdentify()
-		}, 10000)
+		}, 600000)
 		if (EncryptAble) {
+			getKey()
 			timer_encryptKey = setTimeout(() => {
 				getKey()
 			}, 600000)
@@ -83,13 +92,15 @@ const NormalLoginForm = () => {
 	}, [])
 	//---------------------------------------- 方法 ----------------------------------------
 	//登录请求
-	const onFinish = async (values: { username: string; password: string; captcha: string }) => {
+	const onFinish = async (values: loginFrom) => {
 		setIsloading(true)
 		let { password } = values
-		let pass = EncryptAble ? encrypt(publicKey, password) : password
+		let pass = EncryptAble ? encrypt(publicKey, password) || '' : password
+		let body: loginBody = { ...values, checkKey: captchaKey, password: pass }
+		if (EncryptAble) body.loginKey = encryptKey
 		let { ok, msg, result } = await fetchJson('/sys/login', {
 			method: 'post',
-			body: JSON.stringify({ ...values, checkKey: captchaKey, password: pass, encryptKey }),
+			body: JSON.stringify(body),
 		})
 		setIsloading(false)
 		if (!ok) {
@@ -163,7 +174,7 @@ const NormalLoginForm = () => {
 			className='login-form'
 			onFinish={onFinish}
 			style={{ width: '100%', marginTop: '20px' }}
-			size='large'
+			size={size}
 		>
 			<Form.Item
 				name='username'

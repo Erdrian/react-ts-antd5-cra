@@ -3,8 +3,18 @@
 	height: 40px;
 	position: relative;
 	text-align: right;
+	line-height: 40px;
+	padding: 0px 16px 0 0;
+}
+.login-page-top-link {
+	color: #1890ff;
+	cursor: pointer;
+}
+.login-page-top-link :hover {
+	color: #40a9ff;
 }
 .content {
+	position: relative;
 	padding: 32px 0 24px;
 }
 
@@ -22,7 +32,6 @@
 	line-height: 44px;
 }
 .form-login-logo {
-	position: relative;
 	width: 44px;
 	height: 44px;
 	margin-right: 16px;
@@ -34,14 +43,12 @@
 }
 
 .form-login-title {
-	position: relative;
 	top: 2px;
 	color: rgba(0, 0, 0, 0.85);
 	font-weight: 600;
 	font-size: 33px;
 }
 .form-login-desc {
-	position: relative;
 	margin-top: 12px;
 	margin-bottom: 44px;
 	color: rgba(0, 0, 0, 0.45);

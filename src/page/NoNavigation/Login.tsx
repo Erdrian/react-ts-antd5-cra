@@ -2,7 +2,7 @@ import Particles from '../../components/Particles'
 import NormalLoginForm from '../../components/LoginForm'
 import { Divider, Space } from 'antd'
 import { GithubOutlined, GoogleOutlined } from '@ant-design/icons'
-import './Login.css'
+import '../../css/Login.css'
 
 const logo = <img alt='logo' src='logo.svg' />
 const title = '安责险风控平台'

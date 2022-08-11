@@ -2,10 +2,10 @@
 import { useEffect, useState } from 'react'
 import { Form, Button, Row, Col } from 'antd'
 import { UpOutlined, DownOutlined } from '@ant-design/icons'
-import history from '../utils/history'
-import { CreateFormItem, formItem } from '../utils/CreateFormItem'
+import history from '../routes/history'
+import { CreateFormItem, formItem } from '../utils/createFormItem'
 import { filterInHistory } from './EnquiryForm'
-import './SearchForm.css'
+import '../css/SearchForm.css'
 
 type searchFormProps = {
 	formItems: formItem[]

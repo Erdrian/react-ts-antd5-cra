@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Menu, MenuProps } from 'antd'
-import history from '../utils/history'
+import history from '../routes/history'
 import Icon from './Icon'
 
 export interface MenuPropsFromAuth {

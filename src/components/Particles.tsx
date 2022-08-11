@@ -7,8 +7,8 @@ const options: ISourceOptions = {
 		color: {
 			value: '#f0f2f5',
 		},
-	image:'url(background.svg)',
-	size:'auto',
+		image: 'url(background.svg)',
+		size: 'auto',
 	},
 	fpsLimit: 120,
 	interactivity: {
@@ -85,6 +85,8 @@ export default () => {
 		// starting from v2 you can add only the features you need reducing the bundle size
 		await loadFull(main)
 	}
+
+	console.log('render')
 
 	return (
 		<>

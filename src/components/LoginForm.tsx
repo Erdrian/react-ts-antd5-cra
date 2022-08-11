@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
 import { JSEncrypt } from 'jsencrypt'
-import history from '../utils/history'
+import history from '../routes/history'
 import { Form, Input, Button, message } from 'antd'
 import { UserOutlined, LockOutlined, SafetyCertificateOutlined } from '@ant-design/icons'
 import fetchJson from '../utils/fetch'
 import { MenuPropsFromAuth } from './Menu'
-import './LoginForm.css'
+import '../css/LoginForm.css'
 import { SizeType } from 'antd/es/config-provider/SizeContext'
 //---------------------------------------- 类型 ----------------------------------------
 interface loginFrom {
@@ -35,7 +35,7 @@ export const getAuth = async () => {
 	if (ok) {
 		let { auth, menu }: { auth: authFromInterface[]; menu: MenuPropsFromAuth[] } = result
 		if (auth && menu) {
-			let authJson: { [key: string]: any } = {}
+			let authJson = {}
 			auth.forEach(({ action, describe }) => {
 				authJson[action] = describe
 			})
@@ -58,11 +58,9 @@ export const getAera = async () => {
 	}
 }
 const EncryptAble = false
-const NormalLoginForm = ({ size = 'large' }: { size?: SizeType }) => {
+const NormalLoginForm = ({ size = 'large', onLogin }: { size?: SizeType; onLogin?: Function }) => {
 	//---------------------------------------- props ----------------------------------------
 	const [form] = Form.useForm()
-	const state = history.location.state as { from: string } | undefined
-	let to = state?.from || '/'
 	//---------------------------------------- state ----------------------------------------
 	const [captchaKey, setcaptchaKey] = useState('') //获取验证码的key
 	const [encryptKey, setencryptKey] = useState('') //加密对应的key
@@ -71,25 +69,27 @@ const NormalLoginForm = ({ size = 'large' }: { size?: SizeType }) => {
 	const [loginError, setLoginError] = useState('') //登录失败的错误信息
 	const [isLoading, setIsloading] = useState(false) //登录请求状态
 	//---------------------------------------- effect ----------------------------------------
+	// 获取验证码和密码加密码
 	useEffect(() => {
 		getIdentify()
-		let timer_captchaKey: ReturnType<typeof setTimeout> | null = null
-		let timer_encryptKey: ReturnType<typeof setTimeout> | null = null
-		timer_captchaKey = setTimeout(() => {
-			getIdentify()
-		}, 600000)
 		if (EncryptAble) {
 			getKey()
-			timer_encryptKey = setTimeout(() => {
-				getKey()
-			}, 600000)
+		}
+	}, [])
+	// 60s后重新获取验证码和密码加密码
+	useEffect(() => {
+		let timer_captchaKey: ReturnType<typeof setTimeout> | null = null
+		let timer_encryptKey: ReturnType<typeof setTimeout> | null = null
+		timer_captchaKey = setTimeout(getIdentify, 60000)
+		if (EncryptAble) {
+			timer_encryptKey = setTimeout(getKey, 60000)
 		}
 		return () => {
 			timer_captchaKey && clearTimeout(timer_captchaKey)
 			timer_encryptKey && clearTimeout(timer_encryptKey)
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [])
+	}, [captchaKey, encryptKey])
 	//---------------------------------------- 方法 ----------------------------------------
 	//登录请求
 	const onFinish = async (values: loginFrom) => {
@@ -104,17 +104,10 @@ const NormalLoginForm = ({ size = 'large' }: { size?: SizeType }) => {
 		})
 		setIsloading(false)
 		if (!ok) {
-			if (msg === '登录key失效') {
-				if (EncryptAble) {
-					await getKey()
-					onFinish(values)
-				}
-			} else {
-				setLoginError(msg)
-				getIdentify()
-				getKey()
-				form.resetFields(['captcha'])
-			}
+			setLoginError(msg)
+			getIdentify()
+			getKey()
+			form.resetFields(['captcha'])
 		} else {
 			let { token, sysAllDictItems, userInfo } = result
 			localStorage.setItem('DictItems', JSON.stringify(sysAllDictItems))
@@ -122,8 +115,8 @@ const NormalLoginForm = ({ size = 'large' }: { size?: SizeType }) => {
 			localStorage.setItem('token', token)
 			await getAuth()
 			await getAera()
-			if (to === '/login') to = '/'
-			history.push(to)
+			history.push('/')
+			onLogin?.()
 		}
 	}
 
@@ -235,7 +228,7 @@ const NormalLoginForm = ({ size = 'large' }: { size?: SizeType }) => {
 						alt='验证码'
 						style={{ width: 'auto', height: '39px', cursor: 'pointer' }}
 						src={identify}
-						onClick={() => getIdentify()}
+						onClick={getIdentify}
 					/>
 				</div>
 			</Form.Item>

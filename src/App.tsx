@@ -1,12 +1,9 @@
 import './App.less'
-
 import Login from './page/NoNavigation/Login'
 
-function App() {
+const App = () => {
 	return (
-		<>
-			<Login/>
-		</>
+		<Login/>
 	)
 }
 export default App

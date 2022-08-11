@@ -1,10 +1,10 @@
-import React, { useEffect, useState, forwardRef, useCallback, ReactNode, useImperativeHandle } from 'react'
+import { useEffect, useState, forwardRef, useCallback, ReactNode, useImperativeHandle } from 'react'
 import { Table, TableProps } from 'antd'
-import history from '../utils/history'
+import history from '../routes/history'
 import fetchJson from '../utils/fetch'
 import SearchForm from './SearchForm'
-import { formItem } from '../utils/CreateFormItem'
-import './EnquiryForm.css'
+import { formItem } from '../utils/createFormItem'
+import '../css/EnquiryForm.css'
 
 export type EnquiryFormProps = {
 	api: string
@@ -32,7 +32,7 @@ export default forwardRef<any, EnquiryFormProps>((props, ref) => {
 		? state
 		: { filter_history: {}, page_history: 1, pageSize_history: 10 }
 	//---------------------------------------- state ----------------------------------------
-	const [_Data, set_Data] = useState([])
+	const [dataSource, setdataSource] = useState([])
 	const [isLoading, setIsloading] = useState(false) //  数据是否载入中
 	const [current, setCurrent] = useState(page_history) //  当前页
 	const [pageSize, setPageSize] = useState(pageSize_history) //  每页数据条数
@@ -41,6 +41,8 @@ export default forwardRef<any, EnquiryFormProps>((props, ref) => {
 
 	//---------------------------------------- effect ----------------------------------------
 	useEffect(() => {
+		console.log('aaa')
+
 		getData({ filter, page: current, pageSize })
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
@@ -55,41 +57,36 @@ export default forwardRef<any, EnquiryFormProps>((props, ref) => {
 		})
 	}
 	// 表格数据获取方法
-	const getData = useCallback(
-		async (props: { filter: { [key: string]: [value: any] }; page: number; pageSize: number }) => {
-			setIsloading(true)
-			let { filter, page, pageSize } = props
-			//筛选条件
-			let filterStr = ''
-			for (let key in filter) {
-				if (filter[key] === undefined) continue
-				filterStr += `&${key}=${filter[key]}`
+	const getData = async (props: { filter: {}; page: number; pageSize: number }) => {
+		setIsloading(true)
+		let { filter, page, pageSize } = props
+		//筛选条件
+		let filterStr = ''
+		for (let key in filter) {
+			if (filter[key] === undefined) continue
+			filterStr += `&${key}=${filter[key]}`
+		}
+		if (filter_api) {
+			for (let key in filter_api) {
+				filterStr += `&${key}=${filter_api[key]}`
 			}
-			if (filter_api) {
-				for (let key in filter_api) {
-					filterStr += `&${key}=${filter_api[key]}`
-				}
-			}
-			//排序
-			let sort = sortRule ? `&column=${sortRule.column}&order=${sortRule.order}` : ''
+		}
+		//排序
+		let sort = sortRule ? `&column=${sortRule.column}&order=${sortRule.order}` : ''
 
-			let { ok, result } = await fetchJson(`${api}?pageNo=${page}&pageSize=${pageSize}${filterStr}${sort}`)
-			if (ok) {
-				let { total, records } = result
-				if (!records) records = result
-				let data = records
-				dataProcess(data)
-				set_Data(data)
-				setTotal(total)
-				setIsloading(false)
-			}
-		},
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[]
-	)
+		let { ok, result } = await fetchJson(`${api}?pageNo=${page}&pageSize=${pageSize}${filterStr}${sort}`)
+		if (ok) {
+			let { total, records } = result
+			if (!records) records = result
+			dataProcess(records)
+			setdataSource(records)
+			setTotal(total)
+		}
+		setIsloading(false)
+	}
+
 	// 暴露表格数据获取方法给父组件
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	useImperativeHandle(ref, () => ({ getData }), [])
+	useImperativeHandle(ref, () => ({ getData }))
 
 	// 搜素时的回调函数
 	const onSearch = useCallback((filter: {}) => {
@@ -132,7 +129,6 @@ export default forwardRef<any, EnquiryFormProps>((props, ref) => {
 		current,
 		pageSize,
 	}
-	//暴露出组件请求数据的方法给父级
 
 	return (
 		<div className={!detail ? 'list-page-content' : ''}>
@@ -142,7 +138,7 @@ export default forwardRef<any, EnquiryFormProps>((props, ref) => {
 			</div>
 			{content}
 			{/* 表格 */}
-			<Table {...tableProps} dataSource={_Data} pagination={pagination} loading={isLoading} />
+			<Table {...tableProps} dataSource={dataSource} pagination={pagination} loading={isLoading} />
 		</div>
 	)
 })

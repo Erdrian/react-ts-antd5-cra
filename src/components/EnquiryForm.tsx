@@ -1,10 +1,10 @@
 import { useEffect, useState, forwardRef, useCallback, ReactNode, useImperativeHandle } from 'react'
 import { Table, TableProps } from 'antd'
-import history from '../routes/history'
 import fetchJson from '../utils/fetch'
 import SearchForm from './SearchForm'
 import { formItem } from '../utils/createFormItem'
 import '../css/EnquiryForm.css'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 export type EnquiryFormProps = {
 	api: string
@@ -22,12 +22,13 @@ export type filterInHistory = {
 	pageSize_history: number
 }
 
-// eslint-disable-next-line import/no-anonymous-default-export
 export default forwardRef<any, EnquiryFormProps>((props, ref) => {
 	//---------------------------------------- props ----------------------------------------
 	let { api, filter_api, searchItems, content, sortRule, tableProps, detail = false } = props
-	let state = history.location.state as filterInHistory
-	let pathname = history.location.pathname
+	const location = useLocation()
+	const navigate = useNavigate()
+	let state = location.state as filterInHistory
+	let pathname = location.pathname
 	const { filter_history, page_history, pageSize_history } = state
 		? state
 		: { filter_history: {}, page_history: 1, pageSize_history: 10 }
@@ -41,10 +42,7 @@ export default forwardRef<any, EnquiryFormProps>((props, ref) => {
 
 	//---------------------------------------- effect ----------------------------------------
 	useEffect(() => {
-		console.log('aaa')
-
 		getData({ filter, page: current, pageSize })
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 	//---------------------------------------- 方法 ----------------------------------------
 	// 数据处理，给每个数据加上key
@@ -73,7 +71,6 @@ export default forwardRef<any, EnquiryFormProps>((props, ref) => {
 		}
 		//排序
 		let sort = sortRule ? `&column=${sortRule.column}&order=${sortRule.order}` : ''
-
 		let { ok, result } = await fetchJson(`${api}?pageNo=${page}&pageSize=${pageSize}${filterStr}${sort}`)
 		if (ok) {
 			let { total, records } = result
@@ -88,16 +85,19 @@ export default forwardRef<any, EnquiryFormProps>((props, ref) => {
 	// 暴露表格数据获取方法给父组件
 	useImperativeHandle(ref, () => ({ getData }))
 
+	// 搜索时跳转url的公共方法
+	const navigateWithSearch = (filter: {}, page: number, pageSize: number) => {
+		navigate(pathname, {
+			state: { filter_history: filter, page_history: page, pageSize_history: pageSize },
+			replace: true,
+		})
+	}
 	// 搜素时的回调函数
 	const onSearch = useCallback((filter: {}) => {
 		setCurrent(1)
 		setFilter(filter)
 		getData({ page: 1, pageSize, filter })
-		history.push(pathname, {
-			filter_history: filter,
-			page_history: 1,
-			pageSize_history: pageSize,
-		})
+		navigateWithSearch(filter, 1, pageSize)
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 	// 重置搜索时的回调函数
@@ -105,11 +105,7 @@ export default forwardRef<any, EnquiryFormProps>((props, ref) => {
 		setCurrent(1)
 		setFilter({})
 		getData({ page: 1, pageSize, filter: {} })
-		history.push(pathname, {
-			filter_history: {},
-			page_history: 1,
-			pageSize_history: 10,
-		})
+		navigateWithSearch({}, 1, 10)
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
@@ -120,11 +116,7 @@ export default forwardRef<any, EnquiryFormProps>((props, ref) => {
 			setCurrent(page)
 			setPageSize(pageSize)
 			getData({ page, pageSize, filter })
-			history.push(pathname, {
-				filter_history: filter,
-				page_history: page,
-				pageSize_history: pageSize,
-			})
+			navigateWithSearch(filter, page, pageSize)
 		},
 		current,
 		pageSize,

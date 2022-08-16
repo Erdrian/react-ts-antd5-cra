@@ -9,7 +9,6 @@ export type MultiFromProps = {
 	span?: number
 }[]
 
-// eslint-disable-next-line import/no-anonymous-default-export
 export default (props: MultiFromProps) => {
 	return (
 		<Row gutter={16}>

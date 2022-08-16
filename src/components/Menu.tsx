@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Menu, MenuProps } from 'antd'
-import history from '../routes/history'
 import Icon from './Icon'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 export interface MenuPropsFromAuth {
 	id: string
@@ -51,16 +51,18 @@ const getMenuItems = (child: MenuPropsFromAuth[], subMenukeys?: string[]): MenuI
 let routeMap: { [key: string]: string[] } = {}
 let rootSubmenuKeys: string[] = []
 
-// eslint-disable-next-line import/no-anonymous-default-export
-export default ({ menuProps }: { menuProps: MenuPropsFromAuth[] }) => {
+export default ({ menuProps, collapsed }: { menuProps: MenuPropsFromAuth[]; collapsed?: boolean }) => {
 	//---------------------------------------- props ----------------------------------------
-	let pathname = history.location.pathname
+	const navigate = useNavigate()
+	const location = useLocation()
+	let pathname = location.pathname
 	let items = getMenuItems(menuProps)
-
+	
+	
+	const multi = isMulti()
 	//---------------------------------------- state ----------------------------------------
 	const [openKeys, setopenKeys] = useState<string[]>([]) //当前展开的subMenu
 	const [selectedKeys, setselectedKeys] = useState<string[]>([])
-	const [IsMulti, setIsMulti] = useState(false)
 	//---------------------------------------- effect ----------------------------------------
 	// 自动展开当前路由的菜单
 	useEffect(() => {
@@ -68,19 +70,12 @@ export default ({ menuProps }: { menuProps: MenuPropsFromAuth[] }) => {
 		setselectedKeys([key])
 		setopenKeys(routeMap[key] || [])
 	}, [pathname])
-	// 判断菜单是否大于两级
-	useEffect(() => {
-		Object.entries(routeMap).forEach(([_key, value]) => {
-			if (value.length > 1) {
-				setIsMulti(true)
-			}
-		})
-	}, [])
+
 	//---------------------------------------- 方法 ----------------------------------------
 	//自动收起非当前展开菜单
 	const handleOpenKeysChange: MenuProps['onOpenChange'] = (keys) => {
 		// 菜单层级大于两级,不再自动收起非当前展开菜单
-		if (IsMulti) {
+		if (multi) {
 			setopenKeys(keys)
 		} else {
 			const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1) || ''
@@ -91,8 +86,17 @@ export default ({ menuProps }: { menuProps: MenuPropsFromAuth[] }) => {
 			}
 		}
 	}
+	// 判断菜单层级是否大于两级
+	function isMulti() {
+		Object.entries(routeMap).forEach(([_key, value]) => {
+			if (value.length > 1) {
+				return true
+			}
+		})
+		return false
+	}
 	const onClick: MenuProps['onClick'] = (e) => {
-		history.push(`/${e.key}`)
+		navigate(`/${e.key}`)
 		setselectedKeys([e.key])
 	}
 	return (
@@ -104,6 +108,6 @@ export default ({ menuProps }: { menuProps: MenuPropsFromAuth[] }) => {
 			onClick={onClick}
 			onOpenChange={handleOpenKeysChange}
 			openKeys={openKeys}
-		></Menu>
+		/>
 	)
 }

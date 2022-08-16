@@ -1,0 +1,50 @@
+.logo {
+	display: flex;
+	height: 32px;
+	margin: 16px;
+	background-color: #001529;
+	overflow: hidden;
+	cursor: pointer;
+	color: #fff;
+	align-items: center;
+}
+.logo-icon {
+	font-size: 28px;
+	margin-left: 10px;
+}
+.logo-title {
+	flex-shrink: 0;
+	font-size: 20px;
+	margin-left: 16px;
+	font-weight: bold;
+}
+.site-layout-background {
+	padding: 0;
+	background-color: #fff;
+	font-size: 16px;
+}
+.site-layout-background .trigger {
+	padding: 0 24px;
+	font-size: 20px;
+	line-height: 64px;
+	cursor: pointer;
+	transition: 0.3;
+}
+.site-layout-background .trigger:hover {
+	color: #1890ff;
+}
+
+.layout-header-right {
+	float: right;
+	margin-right: 12px;
+}
+
+.user-avatar {
+	margin-bottom: 4px;
+	cursor: pointer;
+}
+
+.user-name {
+	font-size: 14px;
+	margin-left: 8px;
+}

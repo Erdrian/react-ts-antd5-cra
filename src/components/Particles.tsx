@@ -77,7 +77,6 @@ const options: ISourceOptions = {
 	detectRetina: true,
 	zLayers: 1,
 }
-// eslint-disable-next-line import/no-anonymous-default-export
 export default () => {
 	const particlesInit = async (main: Engine) => {
 		// you can initialize the tsParticles instance (main) here, adding custom shapes or presets
@@ -86,7 +85,6 @@ export default () => {
 		await loadFull(main)
 	}
 
-	console.log('render')
 
 	return (
 		<>

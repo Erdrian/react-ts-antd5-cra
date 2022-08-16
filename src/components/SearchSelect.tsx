@@ -9,8 +9,15 @@ export interface SearchSelectProps extends SelectProps {
 }
 
 const SearchSelect = (props: SearchSelectProps) => {
+	//---------------------------------------- props ----------------------------------------
 	let { initOption, initValue, getOptionData, onValueChange } = props
 	let inputOptions = { ...props }
+	let timeout: ReturnType<typeof setTimeout> | null
+	let currentValue: string
+	//---------------------------------------- state ----------------------------------------
+	const [data, setData] = useState<any[]>([])
+	const [value, setValue] = useState<string>()
+	//---------------------------------------- effect ----------------------------------------
 	useEffect(() => {
 		if (initOption) {
 			setData(initOption)
@@ -19,8 +26,7 @@ const SearchSelect = (props: SearchSelectProps) => {
 			setValue(initValue)
 		}
 	}, [initOption, initValue])
-	let timeout: ReturnType<typeof setTimeout> | null
-	let currentValue: string
+	//---------------------------------------- 方法 ----------------------------------------
 	function fetch(value: string, callback: (data: any) => void) {
 		if (timeout) {
 			clearTimeout(timeout)
@@ -32,8 +38,6 @@ const SearchSelect = (props: SearchSelectProps) => {
 		}
 		timeout = setTimeout(fake, 300)
 	}
-	const [data, setData] = useState<any[]>([])
-	const [value, setValue] = useState<string>()
 	const handleSearch = (value: any) => {
 		if (value) {
 			fetch(value, (data) => setData(data))

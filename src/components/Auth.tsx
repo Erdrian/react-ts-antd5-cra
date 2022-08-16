@@ -1,4 +1,3 @@
-/* eslint-disable import/no-anonymous-default-export */
 import { ReactNode } from 'react'
 export default (props: { action?: string; children: ReactNode; creator: string }): ReactNode => {
 	const auth = JSON.parse(localStorage.getItem('Auth') || '{}')

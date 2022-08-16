@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, forwardRef, useEffect, Ref, useImperativeHandle } from 'react'
 import { UploadOutlined, PlusOutlined } from '@ant-design/icons'
 import { Upload, Button, message, UploadFile, UploadProps } from 'antd'
@@ -15,8 +14,11 @@ export interface MyUploadProps extends UploadProps {
 	ref?: Ref<any>
 }
 export default forwardRef<any, MyUploadProps>((props, ref) => {
+	//---------------------------------------- props ----------------------------------------
 	let { onFileChange, listType = 'text' } = props
+	//---------------------------------------- state ----------------------------------------
 	const [fileList, setfileList] = useState<UploadFile[]>([])
+	//---------------------------------------- effect ----------------------------------------
 	//根据ID获取已上传的附件列表
 	useEffect(() => {
 		let { defaultFileListById } = props
@@ -66,7 +68,7 @@ export default forwardRef<any, MyUploadProps>((props, ref) => {
 		onFileChange?.(fileList)
 	}, [])
 
-	//----------------------------------------  ----------------------------------------
+	//---------------------------------------- 方法 ----------------------------------------
 
 	const onChange: UploadProps['onChange'] = ({ file, fileList }) => {
 		let { status, name } = file

@@ -2,10 +2,10 @@
 import { useEffect, useState } from 'react'
 import { Form, Button, Row, Col } from 'antd'
 import { UpOutlined, DownOutlined } from '@ant-design/icons'
-import history from '../routes/history'
 import { CreateFormItem, formItem } from '../utils/createFormItem'
 import { filterInHistory } from './EnquiryForm'
 import '../css/SearchForm.css'
+import { useLocation } from 'react-router-dom'
 
 type searchFormProps = {
 	formItems: formItem[]
@@ -13,14 +13,17 @@ type searchFormProps = {
 	onReset: Function
 }
 
-// eslint-disable-next-line import/no-anonymous-default-export
 export default ({ formItems, onSearch, onReset }: searchFormProps) => {
+	//---------------------------------------- state ----------------------------------------
+	const [showmore, setshowmore] = useState(false)
+	//---------------------------------------- props ----------------------------------------
 	const [form] = Form.useForm()
 	const defaultSerachItemsNum = 3
-	const [showmore, setshowmore] = useState(false)
+	const location = useLocation()
 	const limit = !showmore ? defaultSerachItemsNum - 1 : 99
+	//---------------------------------------- effect ----------------------------------------
 	useEffect(() => {
-		const state = history.location.state as filterInHistory
+		const state = location.state as filterInHistory
 		const filter = state?.filter_history
 		if (!filter) return
 		if (Object.keys(filter).length === 0) {

@@ -12,7 +12,6 @@ export interface blockContentProps {
 	panelProps?: {}
 }
 
-// eslint-disable-next-line import/no-anonymous-default-export
 export default ({
 	title = '暂无标题',
 	defaultActive = true,

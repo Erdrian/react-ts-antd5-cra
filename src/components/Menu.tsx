@@ -56,9 +56,6 @@ export default ({ menuProps, collapsed }: { menuProps: MenuPropsFromAuth[]; coll
 	const navigate = useNavigate()
 	const location = useLocation()
 	let pathname = location.pathname
-	let items = getMenuItems(menuProps)
-	
-	
 	const multi = isMulti()
 	//---------------------------------------- state ----------------------------------------
 	const [openKeys, setopenKeys] = useState<string[]>([]) //当前展开的subMenu
@@ -101,7 +98,7 @@ export default ({ menuProps, collapsed }: { menuProps: MenuPropsFromAuth[]; coll
 	}
 	return (
 		<Menu
-			items={items}
+			items={getMenuItems(menuProps)}
 			mode='inline'
 			theme='dark'
 			selectedKeys={selectedKeys}

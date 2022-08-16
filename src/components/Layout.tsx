@@ -1,14 +1,88 @@
 import { MenuUnfoldOutlined, MenuFoldOutlined, LogoutOutlined, SettingOutlined } from '@ant-design/icons'
-import { Avatar, Dropdown, Layout, Menu, message, Modal, Space } from 'antd'
+import { Avatar, Dropdown, Form, Layout, Menu, message, Modal, Space } from 'antd'
 import { useState, createElement } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 import Icon from './Icon'
 import Mymenu from './Menu'
 import '../css/Layout.css'
 import fetchJson from '../utils/fetch'
+import { CreateFormItem, formItem } from '../utils/createFormItem'
+import { password } from '../utils/regexp'
 //----------------------------------------  ----------------------------------------
+// 用户头像下拉菜单|用户修改密码
 const UserMenu = () => {
 	const navigate = useNavigate()
+	const [form] = Form.useForm()
+	const formItems: formItem[] = [
+		{
+			type: 'password',
+			itemOptions: {
+				label: '旧密码',
+				name: 'oldpassword',
+				rules: [
+					{
+						required: true,
+						message: '确认你的新密码',
+					},
+				],
+			},
+			inputOptions: {
+				placeholder: '请输入旧密码',
+			},
+		},
+		{
+			type: 'password',
+			itemOptions: {
+				label: '新密码',
+				name: 'password',
+				rules: [
+					{
+						required: true,
+						message: '输入你的新密码',
+					},
+					() => ({
+						validator(_, value) {
+							const regexp = new RegExp(password)
+							if (regexp.test(value)) {
+								return Promise.resolve()
+							}
+							return Promise.reject(new Error('密码8-16位，至少包含大写字母，小写字母和数字'))
+						},
+					}),
+				],
+				hasFeedback: true,
+			},
+			inputOptions: {
+				placeholder: '8-16位，至少包含大写字母，小写字母和数字',
+			},
+		},
+		{
+			type: 'password',
+			itemOptions: {
+				label: '确认密码',
+				name: 'confirmpassword',
+				dependencies: ['password'],
+				rules: [
+					{
+						required: true,
+						message: '确认你的新密码',
+					},
+					({ getFieldValue }) => ({
+						validator(_, value) {
+							if (!value || getFieldValue('password') === value) {
+								return Promise.resolve()
+							}
+							return Promise.reject(new Error('两次输入的密码不一致'))
+						},
+					}),
+				],
+				hasFeedback: true,
+			},
+			inputOptions: {
+				placeholder: '重复你的密码',
+			},
+		},
+	]
 	//---------------------------------------- state ----------------------------------------
 	const [visible, setvisible] = useState(false)
 	//---------------------------------------- 方法 ----------------------------------------
@@ -20,9 +94,29 @@ const UserMenu = () => {
 			message.success('您已退出登录')
 		}
 	}
+	const submit = () => {
+		form.validateFields().then(async (value) => {
+			let { username } = JSON.parse(localStorage.getItem('UserInfo') || '{}')
+			let { ok } = await fetchJson('/sys/user/updatePassword', {
+				method: 'PUT',
+				body: JSON.stringify({ ...value, username }),
+			})
+			if (ok) {
+				setvisible(false)
+				message.success('密码修改成功')
+			}
+		})
+	}
+	const onCancel = () => {
+		setvisible(false)
+	}
 	return (
 		<>
-			<Modal visible={visible}></Modal>
+			<Modal title='修改密码' visible={visible} onOk={submit} onCancel={onCancel} destroyOnClose>
+				<Form labelCol={{ span: 4 }} wrapperCol={{ span: 20 }} form={form} preserve={false}>
+					{formItems.map((formItem, i) => CreateFormItem(formItem, i))}
+				</Form>
+			</Modal>
 			<Menu className='avatardropdown'>
 				<Menu.Item
 					key='1'
@@ -58,6 +152,8 @@ export default () => {
 	const { Header, Sider, Content } = Layout
 	const menuProps = JSON.parse(localStorage.getItem('Menu') || '[]')
 	const navigate = useNavigate()
+	const logo = <Icon type='icon-fengkong' className='logo-icon' />
+	const title = '安责险风控系统'
 	//---------------------------------------- state ----------------------------------------
 	const [collapsed, setcollapased] = useState(false)
 	return (
@@ -69,8 +165,8 @@ export default () => {
 						navigate('/')
 					}}
 				>
-					<Icon type='icon-fengkong' className='logo-icon' />
-					<span className='logo-title'>安责险风控系统</span>
+					{logo}
+					<span className='logo-title'>{title}</span>
 				</div>
 				<Mymenu menuProps={menuProps} collapsed={collapsed} />
 			</Sider>

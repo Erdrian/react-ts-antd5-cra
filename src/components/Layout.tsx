@@ -72,7 +72,7 @@ export default () => {
 					<Icon type='icon-fengkong' className='logo-icon' />
 					<span className='logo-title'>安责险风控系统</span>
 				</div>
-				<Mymenu menuProps={menuProps} />
+				<Mymenu menuProps={menuProps} collapsed={collapsed} />
 			</Sider>
 			<Layout className='site-layout'>
 				<Header className='site-layout-background'>

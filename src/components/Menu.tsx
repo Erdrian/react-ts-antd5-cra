@@ -69,7 +69,7 @@ export default ({ menuProps, collapsed }: { menuProps: MenuPropsFromAuth[]; coll
 		let key: string = pathname.slice(1) || ''
 		setselectedKeys([key])
 		setopenKeys(routeMap[key] || [])
-	}, [pathname])
+	}, [pathname,collapsed])
 
 	//---------------------------------------- 方法 ----------------------------------------
 	//自动收起非当前展开菜单

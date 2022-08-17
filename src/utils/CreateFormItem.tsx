@@ -25,8 +25,22 @@ import RichText from '../components/RichText'
 import SearchSelect, { SearchSelectProps } from '../components/SearchSelect'
 const { Item } = Form
 
+type formItemType =
+	| 'input'
+	| 'inputNumber'
+	| 'select'
+	| 'upload'
+	| 'textArea'
+	| 'password'
+	| 'searchSelect'
+	| 'datePicker'
+	| 'radio'
+	| 'switch'
+	| 'treeSelect'
+	| 'richText'
+	| 'group'
 export interface formItem {
-	type: string
+	type: formItemType
 	inputOptions?: InputProps &
 		InputNumberProps &
 		MyUploadProps &
@@ -35,7 +49,7 @@ export interface formItem {
 		DatePickerProps &
 		RadioProps &
 		RadioGroupProps &
-		SwitchProps &
+		SwitchProps & 
 		SelectProps &
 		TreeSelectProps &
 		SearchSelectProps
@@ -44,7 +58,7 @@ export interface formItem {
 	group?: formItem[]
 }
 // eslint-disable-next-line import/no-anonymous-default-export
-export const CreateFormItem = (formItem: formItem, index?: number) => {
+export const createFormItem = (formItem: formItem, index?: number) => {
 	if (!formItem) return ''
 	let { type, inputOptions, itemOptions, group } = formItem
 	let inputNode
@@ -91,7 +105,7 @@ export const CreateFormItem = (formItem: formItem, index?: number) => {
 					{group?.map(({ type, itemOptions, inputOptions, span = 12 }, index) => {
 						return (
 							<Col span={span} key={index}>
-								{CreateFormItem({
+								{createFormItem({
 									type,
 									inputOptions,
 									itemOptions,

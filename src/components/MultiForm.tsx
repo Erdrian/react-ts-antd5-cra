@@ -1,6 +1,6 @@
 import { Row, Col, CollapseProps } from 'antd'
 import BlockContent from './BlockContent'
-import { CreateFormItem, formItem } from '../utils/createFormItem'
+import { createFormItem, formItem } from '../utils/createFormItem'
 
 export type MultiFromProps = {
 	title: string
@@ -29,7 +29,7 @@ export default (props: MultiFromProps) => {
 									}
 									return (
 										<Col {...span} key={index}>
-											{CreateFormItem(formItem)}
+											{createFormItem(formItem)}
 										</Col>
 									)
 								})}

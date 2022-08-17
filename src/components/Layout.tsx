@@ -1,18 +1,35 @@
 import { MenuUnfoldOutlined, MenuFoldOutlined, LogoutOutlined, SettingOutlined } from '@ant-design/icons'
-import { Avatar, Dropdown, Form, Layout, Menu, message, Modal, Space } from 'antd'
+import { Avatar, Dropdown, Form, Layout, Menu, MenuProps, message, Modal, Space } from 'antd'
 import { useState, createElement } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 import Icon from './Icon'
 import Mymenu from './Menu'
 import '../css/Layout.css'
 import fetchJson from '../utils/fetch'
-import { CreateFormItem, formItem } from '../utils/createFormItem'
+import { createFormItem, formItem } from '../utils/createFormItem'
 import { password } from '../utils/regexp'
 //----------------------------------------  ----------------------------------------
 // 用户头像下拉菜单|用户修改密码
 const UserMenu = () => {
 	const navigate = useNavigate()
 	const [form] = Form.useForm()
+	const items: Required<MenuProps>['items'] = [
+		{
+			key: 'passedit',
+			label: '密码修改',
+			icon: <SettingOutlined />,
+			onClick: () => {
+				setvisible(true)
+			},
+		},
+		{
+			key: 'loginout',
+			label: '退出登录',
+			icon: <LogoutOutlined />,
+			onClick: loginOut,
+			danger: true,
+		},
+	]
 	const formItems: formItem[] = [
 		{
 			type: 'password',
@@ -86,7 +103,7 @@ const UserMenu = () => {
 	//---------------------------------------- state ----------------------------------------
 	const [visible, setvisible] = useState(false)
 	//---------------------------------------- 方法 ----------------------------------------
-	const loginOut = async () => {
+	async function loginOut() {
 		let { ok } = await fetchJson('/sys/logout')
 		if (ok) {
 			localStorage.removeItem('token')
@@ -114,22 +131,10 @@ const UserMenu = () => {
 		<>
 			<Modal title='修改密码' visible={visible} onOk={submit} onCancel={onCancel} destroyOnClose>
 				<Form labelCol={{ span: 4 }} wrapperCol={{ span: 20 }} form={form} preserve={false}>
-					{formItems.map((formItem, i) => CreateFormItem(formItem, i))}
+					{formItems.map((formItem, i) => createFormItem(formItem, i))}
 				</Form>
 			</Modal>
-			<Menu className='avatardropdown'>
-				<Menu.Item
-					key='1'
-					onClick={() => {
-						setvisible(true)
-					}}
-				>
-					<SettingOutlined /> 密码修改
-				</Menu.Item>
-				<Menu.Item danger key='2' onClick={loginOut}>
-					<LogoutOutlined /> 退出登录
-				</Menu.Item>
-			</Menu>
+			<Menu className='avatardropdown' items={items} />
 		</>
 	)
 }

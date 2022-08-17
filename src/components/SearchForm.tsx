@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import { Form, Button, Row, Col } from 'antd'
 import { UpOutlined, DownOutlined } from '@ant-design/icons'
-import { CreateFormItem, formItem } from '../utils/createFormItem'
+import { createFormItem, formItem } from '../utils/createFormItem'
 import { filterInHistory } from './EnquiryForm'
 import '../css/SearchForm.css'
 import { useLocation } from 'react-router-dom'
@@ -47,7 +47,7 @@ export default ({ formItems, onSearch, onReset }: searchFormProps) => {
 								''
 							) : (
 								<Col xs={8} sm={8} md={8} lg={6} xl={6} xxl={6} key={index}>
-									{CreateFormItem(item)}
+									{createFormItem(item)}
 								</Col>
 							)
 					  )

@@ -6,7 +6,6 @@ import fetchJson from '../utils/fetch'
 import { MenuPropsFromAuth } from './Menu'
 import '../css/LoginForm.css'
 import { SizeType } from 'antd/es/config-provider/SizeContext'
-import { useNavigate } from 'react-router-dom'
 //---------------------------------------- 类型 ----------------------------------------
 interface loginFrom {
 	username: string
@@ -62,7 +61,6 @@ const EncryptAble = false
 const NormalLoginForm = ({ size = 'large', onLogin }: { size?: SizeType; onLogin?: Function }) => {
 	//---------------------------------------- props ----------------------------------------
 	const [form] = Form.useForm()
-	const navigate = useNavigate()
 	//---------------------------------------- state ----------------------------------------
 	const [captchaKey, setcaptchaKey] = useState('') //获取验证码的key
 	const [encryptKey, setencryptKey] = useState('') //加密对应的key
@@ -117,7 +115,6 @@ const NormalLoginForm = ({ size = 'large', onLogin }: { size?: SizeType; onLogin
 			localStorage.setItem('token', token)
 			await getAuth()
 			await getAera()
-			navigate('/')
 			onLogin?.()
 		}
 	}

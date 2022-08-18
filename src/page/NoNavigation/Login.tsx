@@ -3,12 +3,14 @@ import NormalLoginForm from '../../components/LoginForm'
 import { Divider, Space } from 'antd'
 import { GithubOutlined, GoogleOutlined } from '@ant-design/icons'
 import '../../css/Login.css'
+import { useNavigate } from 'react-router-dom'
 
 const logo = <img alt='logo' src='logo.svg' />
 const title = '安责险风控平台'
 const desc = '用户登录'
 // eslint-disable-next-line import/no-anonymous-default-export
 export default () => {
+	const navigate = useNavigate()
 	return (
 		<>
 			<Particles />
@@ -29,7 +31,11 @@ export default () => {
 						<div className='form-login-desc'>{desc}</div>
 					</div>
 					<div className='form-login-main'>
-						<NormalLoginForm />
+						<NormalLoginForm
+							onLogin={() => {
+								navigate('/')
+							}}
+						/>
 					</div>
 				</div>
 			</div>

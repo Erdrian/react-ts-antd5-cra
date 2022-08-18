@@ -1,44 +1,45 @@
-import { ReactNode } from 'react'
+import { Fragment, ReactNode } from 'react'
 import Login from '../page/NoNavigation/Login'
 import { Route } from 'react-router-dom'
 import Test from '../page/InNavigation/Test'
+import Detail from '../page/InNavigation/Detail'
 //----------------------------------------  ----------------------------------------
 interface route {
 	path: string
 	element: ReactNode
-	auth_perm?: string
-	breadcrumbName?: string
+	authFlag?: string
+	breadcrumbName: string | null
 }
 //----------------------------------------  ----------------------------------------
 export const NoNavigationRoutes: route[] = [
 	{
-		path: '/login/*',
+		path: 'login',
 		element: <Login />,
+		breadcrumbName: null,
 	},
 ]
 export const InNavigationRoutes: route[] = [
 	{
-		path: '/discoveryItem',
+		path: 'discoveryItem',
 		element: <Test />,
+		breadcrumbName: '发现项列表',
 	},
 	{
-		path: '/checkList',
+		path: 'discoveryItem/detail/:id',
+		element: <Detail />,
+		breadcrumbName: '发现项详情',
+	},
+	{
+		path: 'checkList',
 		element: <Test />,
+		breadcrumbName: '检查单列表',
 	},
 ]
 
-export const renderRoute = (routes: route[]) => {
-	const auth = Object.keys(JSON.parse(localStorage.getItem('Auth') || '{}'))
-	let Routes: ReactNode[] = []
-	routes.forEach((route) => {
-		let { path, element, auth_perm } = route
-		if (auth_perm) {
-			if (auth.includes(auth_perm)) {
-				Routes.push(<Route key={path} path={path} element={element} />)
-			}
-		} else {
-			Routes.push(<Route key={path} path={path} element={element} />)
-		}
+export const routesRender = (routes: route[]): ReactNode =>
+	routes.map((route) => {
+		let { path, element, authFlag } = route
+		const auth = Object.keys(JSON.parse(localStorage.getItem('Auth') || '{}'))
+		let render = !authFlag || auth.includes(authFlag)
+		return render ? <Route key={path} path={path} element={element} /> : <Fragment key={path}></Fragment>
 	})
-	return Routes
-}

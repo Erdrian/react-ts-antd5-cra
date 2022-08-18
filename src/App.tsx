@@ -1,16 +1,16 @@
 import './App.less'
 import { Route, Routes } from 'react-router-dom'
-import { NoNavigationRoutes, InNavigationRoutes, renderRoute } from './routes/routes'
+import { NoNavigationRoutes, InNavigationRoutes, routesRender } from './routes/routes'
 import Layout from './components/Layout'
-import NotFound from './page/NoNavigation/NotFound'
+import NotFound from './page/InNavigation/NotFound'
 //----------------------------------------  ----------------------------------------
 const App = () => {
 	return (
 		<>
 			<Routes>
-				{renderRoute(NoNavigationRoutes)}
+				{routesRender(NoNavigationRoutes)}
 				<Route element={<Layout />}>
-					{renderRoute(InNavigationRoutes)}
+					{routesRender(InNavigationRoutes)}
 					<Route path='*' element={<NotFound />} />
 				</Route>
 			</Routes>

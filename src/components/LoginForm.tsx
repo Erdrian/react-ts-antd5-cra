@@ -58,7 +58,7 @@ export const getAera = async () => {
 }
 
 const EncryptAble = false
-const NormalLoginForm = ({ size = 'large', onLogin }: { size?: SizeType; onLogin?: Function }) => {
+const LoginForm = ({ size = 'large', onLogin }: { size?: SizeType; onLogin?: Function }) => {
 	//---------------------------------------- props ----------------------------------------
 	const [form] = Form.useForm()
 	//---------------------------------------- state ----------------------------------------
@@ -122,33 +122,25 @@ const NormalLoginForm = ({ size = 'large', onLogin }: { size?: SizeType; onLogin
 	//获取图形验证码
 	const getIdentify = async () => {
 		const captchaKey = Math.floor(Math.random() * 1000000).toString() //图形验证码的KEY
-		try {
-			let { ok, result } = await fetchJson('/sys/randomImage/' + captchaKey)
-			if (ok) {
-				setIdentify(result)
-				setcaptchaKey(captchaKey)
-			} else {
-				message.error('获取验证码失败，请重试')
-			}
-		} catch (e) {
-			message.error('服务器连接失败，请稍后重试')
+		let { ok, result } = await fetchJson('/sys/randomImage/' + captchaKey)
+		if (ok) {
+			setIdentify(result)
+			setcaptchaKey(captchaKey)
+		} else {
+			message.error('获取验证码失败，请重试')
 		}
 	}
 
 	//获取加密公钥
 	const getKey = async () => {
 		if (!EncryptAble) return
-		try {
-			let { ok, result } = await fetchJson('/sys/getLoginPublicKey')
-			if (ok) {
-				let { encryptKey, publicKey } = result
-				setencryptKey(encryptKey)
-				setpublicKey(publicKey)
-			} else {
-				message.error('获取公钥失败，请刷新页面')
-			}
-		} catch (e) {
-			message.error('服务器连接失败，请稍后重试')
+		let { ok, result } = await fetchJson('/sys/getLoginPublicKey')
+		if (ok) {
+			let { encryptKey, publicKey } = result
+			setencryptKey(encryptKey)
+			setpublicKey(publicKey)
+		} else {
+			message.error('获取公钥失败，请刷新页面')
 		}
 	}
 
@@ -165,7 +157,6 @@ const NormalLoginForm = ({ size = 'large', onLogin }: { size?: SizeType; onLogin
 			name='normal_login'
 			className='login-form'
 			onFinish={onFinish}
-			style={{ width: '100%', marginTop: '20px' }}
 			size={size}
 		>
 			<Form.Item
@@ -259,4 +250,4 @@ const NormalLoginForm = ({ size = 'large', onLogin }: { size?: SizeType; onLogin
 	)
 }
 
-export default NormalLoginForm
+export default LoginForm

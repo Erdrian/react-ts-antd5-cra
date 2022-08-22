@@ -1,6 +1,8 @@
 import { Col, message, Modal, Row } from 'antd'
-import NormalLoginForm from '../components/LoginForm'
+import LoginForm from '../components/LoginForm'
 import '../css/LoginModal.css'
+import { createBrowserHistory } from 'history'
+const history = createBrowserHistory()
 //----------------------------------------  ----------------------------------------
 // export const BASE: string = 'http://localhost:8080'
 export const BASE = 'https://devsli.nbmydigit.com/api'
@@ -16,17 +18,17 @@ export default async function fetchJson(URL: string, options?: RequestInit) {
 				<Row>
 					<Col span={12}>
 						<div className='login-modal-content'>
-							<img className='login-modal-img' alt='12' src='error.svg' />
+							<img className='login-modal-img' alt='401' src='401.svg' />
 							<div className='login-modal-title'>登录失效</div>
 							<div className='login-modal-subtitle'>Token失效，请重新登录</div>
 						</div>
 					</Col>
 					<Col span={12}>
-						<NormalLoginForm
+						<LoginForm
 							size='middle'
 							onLogin={() => {
 								Modal.destroyAll()
-								message.success('登录成功！请重新执行刚才的操作。')
+								message.success('登录成功！')
 							}}
 						/>
 					</Col>
@@ -34,6 +36,7 @@ export default async function fetchJson(URL: string, options?: RequestInit) {
 			),
 		})
 	}
+	const path = history.location.pathname
 	const token: string = localStorage.getItem('token') || ''
 	const headers: {} | undefined = options?.headers
 	try {
@@ -54,7 +57,7 @@ export default async function fetchJson(URL: string, options?: RequestInit) {
 			message: '数据解析失败',
 			result: null,
 		}
-		if (code === 401) {
+		if (code === 401 && path !== '/login' && token) {
 			createLoginModal()
 			return { ok: false }
 		}

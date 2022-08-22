@@ -17,14 +17,11 @@ const getBreadcrumbNameMap = () => {
 	})
 	return result
 }
-
 //----------------------------------------  ----------------------------------------
 export default () => {
 	const breadcrumbNameMap = getBreadcrumbNameMap()
 	const { pathname } = useLocation()
 	const paths = pathname.split('/').filter((i) => i)
-	console.log(breadcrumbNameMap)
-
 	const Items = []
 	for (let i = 1; i <= paths.length; i++) {
 		let path = paths.slice(0, i).join('/')

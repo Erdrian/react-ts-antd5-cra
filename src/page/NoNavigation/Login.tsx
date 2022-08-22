@@ -1,5 +1,5 @@
 import Particles from '../../components/Particles'
-import NormalLoginForm from '../../components/LoginForm'
+import LoginForm from '../../components/LoginForm'
 import { Divider, Space } from 'antd'
 import { GithubOutlined, GoogleOutlined } from '@ant-design/icons'
 import '../../css/Login.css'
@@ -31,7 +31,7 @@ export default () => {
 						<div className='form-login-desc'>{desc}</div>
 					</div>
 					<div className='form-login-main'>
-						<NormalLoginForm
+						<LoginForm
 							onLogin={() => {
 								navigate('/')
 							}}

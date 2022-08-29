@@ -34,29 +34,33 @@ export const randomPassword = (length: number) => {
 	return password.join('')
 }
 //---------------------------------------- 获取字典 ----------------------------------------
-type dictItems = {
-	[key: string]: { value: string; text: string; title: string }[]
+type getDictRes = {
+	[key: string]: any[]
 }
-export const getDict = (dictNames: string[], reversal = false) => {
-	if (!localStorage.getItem('DictItems')) {
-		console.error('字典不存在，请重新登录')
+export const getDict = (dictNames: string[], reversal = false): getDictRes => {
+	type dictItemsType = {
+		[key: string]: { value: string; text: string; title: string }[]
 	}
-	let dictItems = JSON.parse(localStorage.getItem('DictItems') || '{}') as dictItems
-	if (Object.keys(dictItems).length === 0) return {}
+	let dictItems = JSON.parse(localStorage.getItem('DictItems') || '{}') as dictItemsType
 	let result = {}
 	dictNames.forEach((dictName) => {
 		let dictItem = dictItems[dictName]
-		// 创建字典
 		let dict = {}
 		let option: { value: string; label: string }[] = []
-		dictItem.forEach(({ value, text }) => {
-			if (reversal) {
-				dict[text] = value
-			} else {
-				dict[value] = text
-			}
-			option.push({ value, label: text })
-		})
+		if (dictItem) {
+			dictItem.forEach(({ value, text }) => {
+				// 创建字典
+				if (reversal) {
+					dict[text] = value
+				} else {
+					dict[value] = text
+				}
+				// 创建选项
+				option.push({ value, label: text })
+			})
+		} else {
+			console.error(`字典："${dictName}"，解析失败`)
+		}
 		result[dictName] = [dict, option]
 	})
 	return result

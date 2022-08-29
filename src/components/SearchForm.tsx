@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { Form, Button, Row, Col } from 'antd'
 import { UpOutlined, DownOutlined } from '@ant-design/icons'
 import { createFormItem, formItem } from '../utils/createFormItem'
@@ -34,24 +34,17 @@ export default ({ formItems, onSearch, onReset }: searchFormProps) => {
 	})
 	if (formItems.length === 0) return <></>
 	return (
-		<Form
-			className={showmore ? 'table-search-form expand' : 'table-search-form shrink'}
-			form={form}
-			labelCol={{ span: 5 }}
-			wrapperCol={{ span: 19 }}
-		>
+		<Form form={form} labelCol={{ span: 5 }} wrapperCol={{ span: 19 }}>
 			<Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32, xl: 24, xxl: 16 }}>
-				{formItems.length > 0
-					? formItems.map((item, index) =>
-							index > limit ? (
-								''
-							) : (
-								<Col xs={8} sm={8} md={8} lg={6} xl={6} xxl={6} key={index}>
-									{createFormItem(item)}
-								</Col>
-							)
-					  )
-					: ''}
+				{formItems.map((item, index) =>
+					index > limit ? (
+						<Fragment key={index} />
+					) : (
+						<Col xs={8} sm={8} md={8} lg={6} xl={6} xxl={6} key={index}>
+							{createFormItem(item)}
+						</Col>
+					)
+				)}
 				<Col className='table-search-action'>
 					<Button
 						type='primary'
@@ -79,7 +72,7 @@ export default ({ formItems, onSearch, onReset }: searchFormProps) => {
 							{showmore ? <UpOutlined /> : <DownOutlined />} {showmore ? '收起' : '更多'}
 						</a>
 					) : (
-						''
+						<></>
 					)}
 				</Col>
 			</Row>

@@ -57,9 +57,7 @@ export interface formItem {
 	span?: number
 	group?: formItem[]
 }
-// eslint-disable-next-line import/no-anonymous-default-export
 export const createFormItem = (formItem: formItem, index?: number) => {
-	if (!formItem) return ''
 	let { type, inputOptions, itemOptions, group } = formItem
 	let inputNode
 	switch (type) {

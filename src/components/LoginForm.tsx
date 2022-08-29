@@ -88,7 +88,6 @@ const LoginForm = ({ size = 'large', onLogin }: { size?: SizeType; onLogin?: Fun
 			timer_captchaKey && clearTimeout(timer_captchaKey)
 			timer_encryptKey && clearTimeout(timer_encryptKey)
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [captchaKey, encryptKey])
 	//---------------------------------------- 方法 ----------------------------------------
 	//登录请求

@@ -16,11 +16,13 @@ export type EnquiryFormProps = {
 	tableProps: TableProps<any>
 	detail?: boolean
 }
-export type filterInHistory = {
-	filter_history: {}
-	page_history: number
-	pageSize_history: number
-}
+export type filterInHistory =
+	| {
+			filter_history: {}
+			page_history: number
+			pageSize_history: number
+	  }
+	| undefined
 
 export default forwardRef<any, EnquiryFormProps>((props, ref) => {
 	//---------------------------------------- props ----------------------------------------
@@ -29,9 +31,7 @@ export default forwardRef<any, EnquiryFormProps>((props, ref) => {
 	const navigate = useNavigate()
 	let state = location.state as filterInHistory
 	let pathname = location.pathname
-	const { filter_history, page_history, pageSize_history } = state
-		? state
-		: { filter_history: {}, page_history: 1, pageSize_history: 10 }
+	const { filter_history = {}, page_history = 1, pageSize_history = 10 } = state || {}
 	//---------------------------------------- state ----------------------------------------
 	const [dataSource, setdataSource] = useState([])
 	const [isLoading, setIsloading] = useState(false) //  数据是否载入中
@@ -47,7 +47,7 @@ export default forwardRef<any, EnquiryFormProps>((props, ref) => {
 	//---------------------------------------- 方法 ----------------------------------------
 	// 数据处理，给每个数据加上key
 	const dataProcess = (records: []) => {
-		records.forEach((record: { children?: any; id: number; key?: number }, index: number) => {
+		records.forEach((record: { children?: any; id?: number; key?: number }, index: number) => {
 			if (record.children) {
 				dataProcess(record.children)
 			}

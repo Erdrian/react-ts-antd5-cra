@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-anonymous-default-export
 export default (data: Blob | MediaSource, filename: string) => {
 	let a = document.createElement('a')
 	let url = window.URL.createObjectURL(data)

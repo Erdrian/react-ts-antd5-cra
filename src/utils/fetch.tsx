@@ -13,7 +13,6 @@ export default async function fetchJson(URL: string, options?: RequestInit) {
 			icon: null,
 			width: 650,
 			okButtonProps: { style: { display: 'none' } },
-			closable: true,
 			content: (
 				<Row>
 					<Col span={12}>
@@ -28,7 +27,7 @@ export default async function fetchJson(URL: string, options?: RequestInit) {
 							size='middle'
 							onLogin={() => {
 								Modal.destroyAll()
-								message.success('登录成功！')
+								message.success('登录成功')
 							}}
 						/>
 					</Col>
@@ -66,6 +65,7 @@ export default async function fetchJson(URL: string, options?: RequestInit) {
 		}
 		return { ok, result, msg, code, timestamp }
 	} catch (e) {
+		message.error('服务器连接失败，请稍后再试')
 		console.log(e)
 		return { ok: false, message: '服务器连接失败', result: null }
 	}

@@ -6,7 +6,7 @@ import Icon from './Icon'
 import Mymenu from './Menu'
 import '../css/Layout.css'
 import fetchJson from '../utils/fetch'
-import { createFormItem, formItem } from '../utils/createFormItem1'
+import { createFormItem, formItem } from '../utils/createFormItem'
 import { password } from '../utils/regexp'
 //----------------------------------------  ----------------------------------------
 // 用户头像下拉菜单|用户修改密码

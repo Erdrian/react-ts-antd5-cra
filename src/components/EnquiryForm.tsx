@@ -2,7 +2,7 @@ import { useEffect, useState, forwardRef, useCallback, ReactNode, useImperativeH
 import { Table, TableProps } from 'antd'
 import fetchJson from '../utils/fetch'
 import SearchForm from './SearchForm'
-import { formItem } from '../utils/createFormItem1'
+import { formItem } from '../utils/createFormItem'
 import '../css/EnquiryForm.css'
 import { useLocation, useNavigate } from 'react-router-dom'
 

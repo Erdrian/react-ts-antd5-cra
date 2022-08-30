@@ -1,6 +1,6 @@
 import { Row, Col, CollapseProps } from 'antd'
 import BlockContent from './BlockContent'
-import { createFormItem, formItem } from '../utils/createFormItem1'
+import { createFormItem, formItem } from '../utils/createFormItem'
 
 export type MultiFromProps = {
 	title: string

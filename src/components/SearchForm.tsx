@@ -2,7 +2,7 @@
 import { Fragment, useEffect, useState } from 'react'
 import { Form, Button, Row, Col } from 'antd'
 import { UpOutlined, DownOutlined } from '@ant-design/icons'
-import { createFormItem, formItem } from '../utils/createFormItem'
+import { createFormItem, formItem } from '../utils/createFormItem1'
 import { filterInHistory } from './EnquiryForm'
 import '../css/SearchForm.css'
 import { useLocation } from 'react-router-dom'

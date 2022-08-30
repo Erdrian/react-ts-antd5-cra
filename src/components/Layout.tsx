@@ -6,7 +6,7 @@ import Icon from './Icon'
 import Mymenu from './Menu'
 import '../css/Layout.css'
 import fetchJson from '../utils/fetch'
-import { createFormItem, formItem } from '../utils/createFormItem'
+import { createFormItem, formItem } from '../utils/createFormItem1'
 import { password } from '../utils/regexp'
 //----------------------------------------  ----------------------------------------
 // 用户头像下拉菜单|用户修改密码
@@ -112,7 +112,7 @@ const UserMenu = () => {
 		}
 	}
 	const submit = () => {
-		form.validateFields().then(async (value) => {
+		form.validateFields().then(async (value:any) => {
 			let { username } = JSON.parse(localStorage.getItem('UserInfo') || '{}')
 			let { ok } = await fetchJson('/sys/user/updatePassword', {
 				method: 'PUT',

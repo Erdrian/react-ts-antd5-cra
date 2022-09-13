@@ -123,7 +123,7 @@ export default forwardRef<any, EnquiryFormProps>((props, ref) => {
 	}
 
 	return (
-		<div className={!detail ? 'list-page-content' : ''}>
+		<div className={!detail ? 'list-table-content' : ''}>
 			{/* 搜索区 */}
 			<div className='table-search'>
 				<SearchForm formItems={searchItems || []} onSearch={onSearch} onReset={onReset} />

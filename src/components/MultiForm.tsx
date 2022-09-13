@@ -1,21 +1,25 @@
 import { Row, Col, CollapseProps } from 'antd'
 import BlockContent from './BlockContent'
 import { createFormItem, formItem } from '../utils/createFormItem'
+import '../css/MultyForm.css'
 
-export type MultiFromProps = {
+export type BlockFormProps = {
 	title: string
 	collapseProps?: CollapseProps
 	formItems: formItem[]
 	span?: number
-}[]
-
+}
+export type MultiFromProps = {
+	data: BlockFormProps[]
+}
 export default (props: MultiFromProps) => {
+	let { data } = props
 	return (
 		<Row gutter={16}>
-			{props.map(({ title, collapseProps, formItems, span = 24 }, index) => {
+			{data.map(({ title, collapseProps, formItems, span = 24 }, index) => {
 				return (
 					<Col span={span} key={index}>
-						<BlockContent className='multi-form-block' title={title} showArrow={false} {...collapseProps}>
+						<BlockContent className='multi-form-block' title={title} {...collapseProps}>
 							<Row gutter={[{ xs: 32, sm: 32, md: 32, lg: 32, xl: 48, xxl: 64 }, 16]}>
 								{formItems.map((formItem, index) => {
 									let s = formItem.span || 1

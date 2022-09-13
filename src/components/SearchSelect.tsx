@@ -1,17 +1,24 @@
 import { useEffect, useState } from 'react'
 import { Select, SelectProps } from 'antd'
 
+type option = {
+	label: string
+	value: any
+}
 export interface SearchSelectProps extends SelectProps {
-	initOption?: []
-	initValue?: string
-	getOptionData?: (currentValue: string, value: string, callback: (data: any) => void) => void
-	onValueChange?: (value: string) => void
+	customProps?: {
+		initOption?: option[]
+		initValue?: string
+		getOptionData: (value: string) => Promise<option[]>
+		onValueChange?: (value: string) => void
+	}
 }
 
 const SearchSelect = (props: SearchSelectProps) => {
 	//---------------------------------------- props ----------------------------------------
-	let { initOption, initValue, getOptionData, onValueChange } = props
+	let { initOption, initValue, getOptionData, onValueChange } = props.customProps || {}
 	let inputOptions = { ...props }
+	delete inputOptions.customProps
 	let timeout: ReturnType<typeof setTimeout> | null
 	let currentValue: string
 	//---------------------------------------- state ----------------------------------------
@@ -19,12 +26,8 @@ const SearchSelect = (props: SearchSelectProps) => {
 	const [value, setValue] = useState<string>()
 	//---------------------------------------- effect ----------------------------------------
 	useEffect(() => {
-		if (initOption) {
-			setData(initOption)
-		}
-		if (initValue) {
-			setValue(initValue)
-		}
+		initOption && setData(initOption)
+		initValue && setValue(initValue)
 	}, [initOption, initValue])
 	//---------------------------------------- 方法 ----------------------------------------
 	function fetch(value: string, callback: (data: any) => void) {
@@ -33,8 +36,13 @@ const SearchSelect = (props: SearchSelectProps) => {
 			timeout = null
 		}
 		currentValue = value
-		function fake() {
-			getOptionData && getOptionData(currentValue, value, callback)
+		async function fake() {
+			if (getOptionData) {
+				let data = await getOptionData(value)
+				if (value === currentValue) {
+					callback(data)
+				}
+			}
 		}
 		timeout = setTimeout(fake, 300)
 	}

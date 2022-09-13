@@ -19,7 +19,7 @@ const UserMenu = () => {
 			label: '密码修改',
 			icon: <SettingOutlined />,
 			onClick: () => {
-				setvisible(true)
+				setopen(true)
 			},
 		},
 		{
@@ -101,7 +101,7 @@ const UserMenu = () => {
 		},
 	]
 	//---------------------------------------- state ----------------------------------------
-	const [visible, setvisible] = useState(false)
+	const [open, setopen] = useState(false)
 	//---------------------------------------- 方法 ----------------------------------------
 	async function loginOut() {
 		let { ok } = await fetchJson('/sys/logout')
@@ -119,17 +119,17 @@ const UserMenu = () => {
 				body: JSON.stringify({ ...value, username }),
 			})
 			if (ok) {
-				setvisible(false)
+				setopen(false)
 				message.success('密码修改成功')
 			}
 		})
 	}
 	const onCancel = () => {
-		setvisible(false)
+		setopen(false)
 	}
 	return (
 		<>
-			<Modal title='修改密码' visible={visible} onOk={submit} onCancel={onCancel} destroyOnClose>
+			<Modal title='修改密码' open={open} onOk={submit} onCancel={onCancel} destroyOnClose>
 				<Form labelCol={{ span: 4 }} wrapperCol={{ span: 20 }} form={form} preserve={false}>
 					{formItems.map((formItem, i) => createFormItem(formItem, i))}
 				</Form>

@@ -1,0 +1,17 @@
+.multiple-form-content {
+	margin: 24px;
+}
+
+.multi-form-block .ant-collapse-header {
+	background-color: #fff;
+	border-bottom: 1px solid #f0f0f0;
+}
+
+.multi-form-block .ant-collapse-content-box {
+	background-color: #fff;
+}
+
+.multiple-form-action {
+	display: flex;
+	justify-content: flex-end;
+}

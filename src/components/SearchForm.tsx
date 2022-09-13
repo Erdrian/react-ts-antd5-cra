@@ -34,7 +34,7 @@ export default ({ formItems, onSearch, onReset }: searchFormProps) => {
 	})
 	if (formItems.length === 0) return <></>
 	return (
-		<Form form={form} labelCol={{ span: 5 }} wrapperCol={{ span: 19 }}>
+		<Form className='table-search-form' form={form} labelCol={{ span: 5 }} wrapperCol={{ span: 19 }}>
 			<Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32, xl: 24, xxl: 16 }}>
 				{formItems.map((item, index) =>
 					index > limit ? (

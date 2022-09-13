@@ -12,10 +12,11 @@ export interface MyUploadProps extends UploadProps {
 	defaultFileListByPath?: string
 	onFileChange?: Function
 	ref?: Ref<any>
+	placeholder?: string
 }
 export default forwardRef<any, MyUploadProps>((props, ref) => {
 	//---------------------------------------- props ----------------------------------------
-	let { onFileChange, listType = 'text' } = props
+	let { onFileChange, listType = 'text', placeholder } = props
 	//---------------------------------------- state ----------------------------------------
 	const [fileList, setfileList] = useState<UploadFile[]>([])
 	//---------------------------------------- effect ----------------------------------------
@@ -78,7 +79,7 @@ export default forwardRef<any, MyUploadProps>((props, ref) => {
 				let { result } = response
 				if (!response.success) {
 					file.status = 'error'
-					message.error(response.message)
+					message.error(`${name}上传失败：${response.message}`)
 				} else {
 					file.url = `${DownloadBase}${result}`
 					message.success(`${name}上传成功`)
@@ -116,10 +117,10 @@ export default forwardRef<any, MyUploadProps>((props, ref) => {
 			{listType === 'picture-card' ? (
 				<div>
 					<PlusOutlined />
-					<div style={{ marginTop: 8 }}>上传图片</div>
+					<div style={{ marginTop: 8 }}>{placeholder || '上传图片'}</div>
 				</div>
 			) : (
-				<Button icon={<UploadOutlined />}>上传文件</Button>
+				<Button icon={<UploadOutlined />}>{placeholder || '上传文件'}</Button>
 			)}
 		</Upload>
 	)

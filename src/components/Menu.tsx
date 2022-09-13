@@ -7,8 +7,7 @@ export interface MenuPropsFromAuth {
 	id: string
 	path: string | null
 	meta: {
-		componentName: string
-		icon: string | undefined
+		icon?: string
 		title: string
 	}
 	children?: MenuPropsFromAuth[]

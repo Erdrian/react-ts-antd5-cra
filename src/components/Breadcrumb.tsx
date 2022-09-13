@@ -3,11 +3,13 @@ import { Breadcrumb } from 'antd'
 import { Link, useLocation } from 'react-router-dom'
 import { InNavigationRoutes } from '../routes/routes'
 //----------------------------------------  ----------------------------------------
-const pathWithoutParams = (path: string): string => {
-	let paths = path.split('/').filter((i) => i && i.indexOf(':') === -1)
-	return paths.join('/')
-}
-const getBreadcrumbNameMap = () => {
+
+export const getBreadcrumbNameMap = () => {
+	// 将/path/:id之类的路径转换为/path这样的路径
+	const pathWithoutParams = (path: string): string => {
+		let paths = path.split('/').filter((i) => i && i.indexOf(':') === -1)
+		return paths.join('/')
+	}
 	let result = {}
 	InNavigationRoutes.forEach((route) => {
 		let { path, breadcrumbName } = route

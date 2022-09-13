@@ -1,0 +1,8 @@
+.ant-collapse-borderless > .ant-collapse-item > .ant-collapse-content > .ant-collapse-content-box {
+	padding-top: 16px;
+}
+span.collapse-panel-title {
+	font-size: 20px;
+	font-weight: bold;
+	padding-left: 16px;
+}

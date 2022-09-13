@@ -28,6 +28,8 @@ export default async function fetchJson(URL: string, options?: RequestInit) {
 							onLogin={() => {
 								Modal.destroyAll()
 								message.success('登录成功')
+								localStorage.removeItem('loginModalExist')
+								window.location.reload()
 							}}
 						/>
 					</Col>
@@ -56,8 +58,11 @@ export default async function fetchJson(URL: string, options?: RequestInit) {
 			message: '数据解析失败',
 			result: null,
 		}
-		if (code === 401 && path !== '/login' && token) {
-			createLoginModal()
+		if (code === 401) {
+			if (path !== '/login' && token && !(localStorage.getItem('loginModalExist') === 'true')) {
+				createLoginModal()
+				localStorage.setItem('loginModalExist', 'true')
+			}
 			return { ok: false }
 		}
 		if (!ok) {

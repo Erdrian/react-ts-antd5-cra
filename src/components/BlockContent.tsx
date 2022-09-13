@@ -1,44 +1,35 @@
 import { Collapse } from 'antd'
 import { ReactNode } from 'react'
+import '../css/BlockContent.css'
 const { Panel } = Collapse
 
 export interface blockContentProps {
-	title?: string
+	title: string
 	defaultActive?: boolean
-	showArrow?: boolean
 	children: ReactNode
 	className?: string
 	collapseProps?: {}
 	panelProps?: {}
 }
 
-export default ({
-	title = '暂无标题',
-	defaultActive = true,
-	className = '',
-	children,
-	collapseProps,
-	panelProps,
-}: blockContentProps) => {
+export default (props: blockContentProps) => {
+	let { defaultActive = true, className, panelProps, children, title, collapseProps } = props
 	return (
 		<Collapse
+			{...collapseProps}
 			bordered={false}
-			expandIconPosition='right'
+			expandIconPosition='end'
 			defaultActiveKey={defaultActive ? '1' : undefined}
 			className={`site-collapse-custom-collapse ${className}`}
 			style={{ marginBottom: '12px' }}
-			{...collapseProps}
 		>
 			<Panel
 				{...panelProps}
 				key='1'
+				showArrow={false}
 				header={
 					<span
-						style={{
-							fontSize: '20px',
-							fontWeight: 'bold',
-							paddingLeft: '16px',
-						}}
+						className='collapse-panel-title'
 					>
 						{title}
 					</span>

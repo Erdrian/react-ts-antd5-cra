@@ -1,11 +1,16 @@
-const CracoAntDesignPlugin = require('craco-antd')
-const path = require('path')
+const CracoLessPlugin = require('craco-less')
+
 module.exports = {
 	plugins: [
 		{
-			plugin: CracoAntDesignPlugin,
+			plugin: CracoLessPlugin,
 			options: {
-				customizeThemeLessPath: path.join(__dirname, './src/customTheme.less'),
+				lessLoaderOptions: {
+					lessOptions: {
+						modifyVars: {},
+						javascriptEnabled: true,
+					},
+				},
 			},
 		},
 	],

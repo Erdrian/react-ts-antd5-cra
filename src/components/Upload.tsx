@@ -3,10 +3,11 @@ import { UploadOutlined, PlusOutlined } from '@ant-design/icons'
 import { Upload, Button, message, UploadFile, UploadProps } from 'antd'
 import fetchJson from '../utils/fetch'
 import { UploadFileStatus } from 'antd/lib/upload/interface'
-
-const DownloadBase = ''
+//----------------------------------------  ----------------------------------------
+export const DownloadBase = ''
 const UploadBase = 'https://highway.nbmydigit.com/sys/common/upload'
-
+//----------------------------------------  ----------------------------------------
+export type Enclosure_Detail = { fileId: string; fileTitle: string }
 export interface MyUploadProps extends UploadProps {
 	defaultFileListById?: { id: string; flag: string }
 	defaultFileListByPath?: string

@@ -1,15 +1,8 @@
-<<<<<<< HEAD
-import { ConfigProvider, Image, message, Modal, Space } from 'antd'
-import { DownloadBase, Enclosure_Detail } from '../components/Upload'
-import zhCN from 'antd/es/locale/zh_CN'
-import { EyeOutlined } from '@ant-design/icons'
-=======
 import { ConfigProvider, Descriptions, Image, message, Modal, Space } from 'antd'
 import { DownloadBase, Enclosure_Detail } from '../components/Upload'
 import zhCN from 'antd/es/locale/zh_CN'
 import { EyeOutlined } from '@ant-design/icons'
 import { ReactNode } from 'react'
->>>>>>> 079e9653d6afbb5d5d6ccd89d03ae2ab3b9c2b52
 
 //---------------------------------------- 生成随机密码密码 ----------------------------------------
 export const randomPassword = (length: number) => {
@@ -153,16 +146,10 @@ type URLCACHE = {
 	type: string
 }
 let timer: null | ReturnType<typeof setTimeout> = null
-<<<<<<< HEAD
-export const handleDownload = (args: Enclosure_Detail | undefined, onFinish?: Function) => {
-	const URLCACHE = JSON.parse(localStorage.getItem('URLCACHE') || '[]') as URLCACHE[]
-	const delay = 300
-=======
 // 附件点击回调函数
 export const handleDownload = (args: Enclosure_Detail | undefined, onFinish?: Function) => {
 	const URLCACHE = JSON.parse(localStorage.getItem('URLCACHE') || '[]') as URLCACHE[]
 	const delay = 200
->>>>>>> 079e9653d6afbb5d5d6ccd89d03ae2ab3b9c2b52
 	if (timer) {
 		clearTimeout(timer)
 		timer = null
@@ -173,11 +160,7 @@ export const handleDownload = (args: Enclosure_Detail | undefined, onFinish?: Fu
 				message.error('获取下载地址失败，请刷新页面后重试')
 			}
 		let { fileId, fileTitle } = args
-<<<<<<< HEAD
-		// 本地缓存有文件时，直接展示文件，不再重复请求服务器
-=======
 		// 本地缓存有文件时，直接展示文件
->>>>>>> 079e9653d6afbb5d5d6ccd89d03ae2ab3b9c2b52
 		let tar = URLCACHE.find((element) => element.fileId === fileId)
 		if (tar) {
 			let { url, type } = tar
@@ -198,8 +181,6 @@ export const handleDownload = (args: Enclosure_Detail | undefined, onFinish?: Fu
 	}
 	timer = setTimeout(fake, delay)
 }
-<<<<<<< HEAD
-=======
 // 附件按钮
 export const enclosureButtonRender = (value: Enclosure_Detail[] | undefined) => {
 	if (!value) return <></>
@@ -237,4 +218,3 @@ export const DescriptionItemsRender = (
 		)
 	})
 }
->>>>>>> 079e9653d6afbb5d5d6ccd89d03ae2ab3b9c2b52

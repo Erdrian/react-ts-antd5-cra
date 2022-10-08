@@ -4,8 +4,9 @@ import { Divider, Space } from 'antd'
 import { GithubOutlined, GoogleOutlined } from '@ant-design/icons'
 import '../../css/Login.css'
 import { useNavigate } from 'react-router-dom'
+import logoSrc from '../../assets/logo.svg'
 
-const logo = <img alt='logo' src='logo.svg' />
+const logo = <img alt='logo' src={logoSrc} />
 const title = '安责险风控平台'
 const desc = '用户登录'
 // eslint-disable-next-line import/no-anonymous-default-export

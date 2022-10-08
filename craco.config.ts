@@ -1,5 +1,4 @@
 const CracoLessPlugin = require('craco-less')
-
 module.exports = {
 	plugins: [
 		{
@@ -15,3 +14,4 @@ module.exports = {
 		},
 	],
 }
+export {}

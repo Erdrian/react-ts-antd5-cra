@@ -1,13 +1,14 @@
 import Particles from 'react-tsparticles'
 import { loadFull } from 'tsparticles'
 import { Engine, ISourceOptions } from 'tsparticles-engine'
+import background from '../assets/background.svg'
 //----------------------------------------  ----------------------------------------
 const options: ISourceOptions = {
 	background: {
 		color: {
 			value: '#f0f2f5',
 		},
-		image: 'url(background.svg)',
+		image: `url(${background})`,
 		size: 'cover',
 	},
 	fpsLimit: 120,
@@ -84,7 +85,6 @@ export default () => {
 		// starting from v2 you can add only the features you need reducing the bundle size
 		await loadFull(main)
 	}
-
 
 	return (
 		<>

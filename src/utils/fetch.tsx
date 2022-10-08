@@ -1,14 +1,14 @@
 import { Col, message, Modal, Row } from 'antd'
 import LoginForm from '../components/LoginForm'
 import '../css/LoginModal.css'
-import { createBrowserHistory } from 'history'
-const history = createBrowserHistory()
+import errorSvg from '../assets/401.svg'
 //----------------------------------------  ----------------------------------------
 // export const BASE: string = 'http://localhost:8080'
 export const BASE = 'https://devsli.nbmydigit.com/api'
 
 export default async function fetchJson(URL: string, options?: RequestInit) {
 	const createLoginModal = () => {
+		localStorage.setItem('loginModalExist', 'true')
 		Modal.info({
 			icon: null,
 			width: 650,
@@ -17,7 +17,7 @@ export default async function fetchJson(URL: string, options?: RequestInit) {
 				<Row>
 					<Col span={12}>
 						<div className='login-modal-content'>
-							<img className='login-modal-img' alt='401' src='401.svg' />
+							<img className='login-modal-img' alt='401' src={errorSvg} />
 							<div className='login-modal-title'>登录失效</div>
 							<div className='login-modal-subtitle'>Token失效，请重新登录</div>
 						</div>
@@ -37,9 +37,9 @@ export default async function fetchJson(URL: string, options?: RequestInit) {
 			),
 		})
 	}
-	const path = history.location.pathname
+	const path = window.location.pathname
 	const token: string = localStorage.getItem('token') || ''
-	const headers: {} | undefined = options?.headers
+	const headers = options?.headers
 	try {
 		let defaultHeaders = { 'X-Access-Token': token, 'Content-Type': 'application/json; charset=UTF-8' }
 		if (headers) {
@@ -61,7 +61,6 @@ export default async function fetchJson(URL: string, options?: RequestInit) {
 		if (code === 401) {
 			if (path !== '/login' && token && !(localStorage.getItem('loginModalExist') === 'true')) {
 				createLoginModal()
-				localStorage.setItem('loginModalExist', 'true')
 			}
 			return { ok: false }
 		}

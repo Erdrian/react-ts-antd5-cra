@@ -80,7 +80,16 @@ export const CommonRequiredRules = (message?: string) => ({
 		},
 	],
 })
-
+//---------------------------------------- 滚动到指定hash位置 ----------------------------------------
+export const scrollToAnchor = (hash: string) => {
+	if (hash) {
+		const anchorElement = document.getElementById(hash.slice(1))
+		if (anchorElement) {
+			let top = anchorElement.offsetTop + anchorElement.clientHeight
+			window.scrollTo({ behavior: 'smooth', top })
+		}
+	}
+}
 //---------------------------------------- 附件下载相关 ----------------------------------------
 // 使用文件id，从服务器请求附件，返回blob对象
 export const getBlobFromFileId = async (fileId: string): Promise<Blob> => {

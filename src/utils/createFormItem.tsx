@@ -21,11 +21,11 @@ import {
 	Cascader,
 	CascaderProps,
 } from 'antd'
-import { PasswordProps, TextAreaProps } from 'antd/lib/input'
 import MyUpload, { MyUploadProps } from '../components/Upload'
 import RichText from '../components/RichText'
 import SearchSelect, { SearchSelectProps } from '../components/SearchSelect'
 import divisionOptions from './aera'
+import { TextAreaProps, PasswordProps } from 'antd/es/input'
 
 //----------------------------------------  ----------------------------------------
 const { Item } = Form

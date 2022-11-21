@@ -1,0 +1,81 @@
+.list-page-header {
+	background-color: #fff;
+	border-top: 1px solid #f0f0f0;
+}
+.page-header {
+	box-sizing: border-box;
+	margin: 0;
+	color: #000000d9;
+	font-size: 14px;
+	font-variant: tabular-nums;
+	line-height: 1.5715;
+	list-style: none;
+	font-feature-settings: 'tnum';
+	position: relative;
+	padding: 16px 24px;
+	background-color: #fff;
+	border-top: 1px solid #f0f0f0;
+}
+.page-header.has-footer {
+	padding-bottom: 0;
+}
+.page-header.has-breadcrumb {
+	padding-top: 12px;
+}
+
+.page-header-heading {
+	display: flex;
+	justify-content: space-between;
+}
+.has-breadcrumb .page-header-heading {
+	margin-top: 8px;
+}
+
+.page-header-heading-left {
+	display: flex;
+	align-items: center;
+	margin: 4px 0;
+	overflow: hidden;
+}
+.page-header-back {
+	margin-right: 16px;
+	font-size: 16px;
+	line-height: 1;
+}
+.page-header-heading-title {
+	margin-right: 12px;
+	margin-bottom: 0;
+	color: #000000d9;
+	font-weight: 600;
+	font-size: 20px;
+	line-height: 32px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+.page-header-heading-sub-title {
+	margin-right: 12px;
+	color: #00000073;
+	font-size: 14px;
+	line-height: 1.5715;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+.page-header-heading-tags ::before {
+	box-sizing: border-box;
+}
+.page-header-heading-tags ::after {
+	box-sizing: border-box;
+}
+
+.page-header-heading-extra {
+	margin: 4px 0;
+	white-space: nowrap;
+}
+.page-header-content {
+	padding-top: 12px;
+}
+.page-header-footer {
+	margin-top: 16px;
+}

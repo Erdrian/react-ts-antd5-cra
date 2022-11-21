@@ -3,7 +3,7 @@ import { Table, TableProps } from 'antd'
 import fetchJson from '../utils/fetch'
 import SearchForm from './SearchForm'
 import { formItem } from '../utils/createFormItem'
-import '../css/EnquiryForm.css'
+import '../style/EnquiryForm.css'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 export type EnquiryFormProps = {

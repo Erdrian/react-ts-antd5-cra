@@ -1,17 +1,25 @@
-import { useEffect } from 'react'
-import PageHeader from '../../components/PageHeader'
-import fetchJson from '../../utils/fetch'
+import { Button, Modal } from 'antd'
+import { useState } from 'react'
+
+import AMap from '../../components/AMap'
 export default () => {
-	useEffect(() => {
-		//获取所有角色
-		const getAllRole = async () => {
-			await fetchJson('/sys/role/list?pageNo=1&pageSize=100')
-		}
-		getAllRole()
-	}, [])
+	const [open, setopen] = useState(false)
+	const handleOpen = () => {
+		setopen(true)
+	}
+	const handleClose = () => {
+		setopen(false)
+	}
 	return (
 		<>
-			<PageHeader />
+			<Button type='primary' onClick={handleOpen}>
+				开启地图
+			</Button>
+			<Modal title='地图' open={open} onCancel={handleClose}>
+				<div style={{ height: '600px' }}>
+					<AMap />
+				</div>
+			</Modal>
 		</>
 	)
 }

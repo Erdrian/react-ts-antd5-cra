@@ -18,19 +18,19 @@
 	margin-left: 16px;
 	font-weight: bold;
 }
-.site-layout-background {
+.site-layout .site-layout-background {
 	padding: 0;
 	background-color: #fff;
 	font-size: 16px;
 }
-.site-layout-background .trigger {
+.trigger {
 	padding: 0 24px;
 	font-size: 20px;
 	line-height: 64px;
 	cursor: pointer;
 	transition: 0.3;
 }
-.site-layout-background .trigger:hover {
+.trigger:hover {
 	color: #1890ff;
 }
 

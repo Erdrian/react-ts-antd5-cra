@@ -2,7 +2,7 @@ import Particles from '../../components/Particles'
 import LoginForm from '../../components/LoginForm'
 import { Divider, Space } from 'antd'
 import { GithubOutlined, GoogleOutlined } from '@ant-design/icons'
-import '../../css/Login.css'
+import '../../style/Login.css'
 import { useNavigate } from 'react-router-dom'
 import logoSrc from '../../assets/logo.svg'
 

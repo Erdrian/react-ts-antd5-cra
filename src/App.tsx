@@ -1,9 +1,10 @@
-import './App.less'
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { NoNavigationRoutes, InNavigationRoutes, routesRender } from './routes/routes'
 import Layout from './components/Layout'
 import NotFound from './page/InNavigation/NotFound'
 import { useEffect } from 'react'
+import 'antd/dist/reset.css'
+import './App.css'
 //----------------------------------------  ----------------------------------------
 const App = () => {
 	const navigate = useNavigate()

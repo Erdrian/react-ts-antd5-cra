@@ -1,6 +1,6 @@
 import { Col, message, Modal, Row } from 'antd'
 import LoginForm from '../components/LoginForm'
-import '../css/LoginModal.css'
+import '../style/LoginModal.css'
 import errorSvg from '../assets/401.svg'
 //----------------------------------------  ----------------------------------------
 // export const BASE: string = 'http://localhost:8080'
@@ -15,14 +15,14 @@ export default async function fetchJson(URL: string, options?: RequestInit) {
 			okButtonProps: { style: { display: 'none' } },
 			content: (
 				<Row>
-					<Col span={12}>
+					<Col span={12} style={{ width: '300px' }}>
 						<div className='login-modal-content'>
 							<img className='login-modal-img' alt='401' src={errorSvg} />
 							<div className='login-modal-title'>登录失效</div>
 							<div className='login-modal-subtitle'>Token失效，请重新登录</div>
 						</div>
 					</Col>
-					<Col span={12}>
+					<Col span={12} style={{ width: '300px' }}>
 						<LoginForm
 							size='middle'
 							onLogin={() => {

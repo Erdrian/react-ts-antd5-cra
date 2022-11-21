@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react'
-import { JSEncrypt } from 'jsencrypt'
 import { Form, Input, Button, message } from 'antd'
 import { UserOutlined, LockOutlined, SafetyCertificateOutlined } from '@ant-design/icons'
 import fetchJson from '../utils/fetch'
 import { MenuPropsFromAuth } from './Menu'
-import '../css/LoginForm.css'
+import '../style/LoginForm.css'
 import { SizeType } from 'antd/es/config-provider/SizeContext'
 //---------------------------------------- 类型 ----------------------------------------
 interface loginFrom {
@@ -57,14 +56,11 @@ export const getAera = async () => {
 	}
 }
 
-const EncryptAble = false
 const LoginForm = ({ size = 'large', onLogin }: { size?: SizeType; onLogin?: Function }) => {
 	//---------------------------------------- props ----------------------------------------
 	const [form] = Form.useForm()
 	//---------------------------------------- state ----------------------------------------
 	const [captchaKey, setcaptchaKey] = useState('') //获取验证码的key
-	const [encryptKey, setencryptKey] = useState('') //加密对应的key
-	const [publicKey, setpublicKey] = useState('') //密码加密公钥
 	const [identify, setIdentify] = useState('') //验证码的图片编码
 	const [loginError, setLoginError] = useState('') //登录失败的错误信息
 	const [isLoading, setIsloading] = useState(false) //登录请求状态
@@ -72,31 +68,20 @@ const LoginForm = ({ size = 'large', onLogin }: { size?: SizeType; onLogin?: Fun
 	// 获取验证码和密码加密码
 	useEffect(() => {
 		getIdentify()
-		if (EncryptAble) {
-			getKey()
-		}
 	}, [])
 	// 60s后重新获取验证码和密码加密码
 	useEffect(() => {
 		let timer_captchaKey: ReturnType<typeof setTimeout> | null = null
-		let timer_encryptKey: ReturnType<typeof setTimeout> | null = null
 		timer_captchaKey = setTimeout(getIdentify, 60000)
-		if (EncryptAble) {
-			timer_encryptKey = setTimeout(getKey, 60000)
-		}
 		return () => {
 			timer_captchaKey && clearTimeout(timer_captchaKey)
-			timer_encryptKey && clearTimeout(timer_encryptKey)
 		}
-	}, [captchaKey, encryptKey])
+	}, [captchaKey])
 	//---------------------------------------- 方法 ----------------------------------------
 	//登录请求
 	const onFinish = async (values: loginFrom) => {
 		setIsloading(true)
-		let { password } = values
-		let pass = EncryptAble ? encrypt(publicKey, password) || '' : password
-		let body: loginBody = { ...values, checkKey: captchaKey, password: pass }
-		if (EncryptAble) body.loginKey = encryptKey
+		let body: loginBody = { ...values, checkKey: captchaKey }
 		let { ok, msg, result } = await fetchJson('/sys/login', {
 			method: 'post',
 			body: JSON.stringify(body),
@@ -105,7 +90,6 @@ const LoginForm = ({ size = 'large', onLogin }: { size?: SizeType; onLogin?: Fun
 		if (!ok) {
 			setLoginError(msg)
 			getIdentify()
-			getKey()
 			form.resetFields(['captcha'])
 		} else {
 			let { token, sysAllDictItems, userInfo } = result
@@ -130,34 +114,8 @@ const LoginForm = ({ size = 'large', onLogin }: { size?: SizeType; onLogin?: Fun
 		}
 	}
 
-	//获取加密公钥
-	const getKey = async () => {
-		if (!EncryptAble) return
-		let { ok, result } = await fetchJson('/sys/getLoginPublicKey')
-		if (ok) {
-			let { encryptKey, publicKey } = result
-			setencryptKey(encryptKey)
-			setpublicKey(publicKey)
-		} else {
-			message.error('获取公钥失败，请刷新页面')
-		}
-	}
-
-	//加密
-	const encrypt = (publicKey: string, password: string) => {
-		let encryptor = new JSEncrypt()
-		encryptor.setPublicKey(publicKey)
-		return encryptor.encrypt(password)
-	}
-
 	return (
-		<Form
-			form={form}
-			name='normal_login'
-			className='login-form'
-			onFinish={onFinish}
-			size={size}
-		>
+		<Form form={form} name='normal_login' className='login-form' onFinish={onFinish} size={size}>
 			<Form.Item
 				name='username'
 				rules={[

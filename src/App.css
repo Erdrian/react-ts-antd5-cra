@@ -1,0 +1,21 @@
+::-webkit-scrollbar {
+	width: 6px;
+	height: 10px;
+	background-color: #f5f5f5;
+}
+::-webkit-scrollbar-track {
+	background-color: #f1f1f1;
+	border-radius: 1em;
+}
+::-webkit-scrollbar-thumb {
+	border-radius: 10px;
+	background-color: #a8a8a8;
+}
+
+/* 隐藏高德的logo */
+#amap-container > a.amap-logo {
+	display: none !important;
+}
+#amap-container > div.amap-copyright {
+	display: none !important;
+}

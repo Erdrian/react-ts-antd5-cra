@@ -1,6 +1,6 @@
 import { Collapse } from 'antd'
 import { ReactNode } from 'react'
-import '../css/BlockContent.css'
+import '../style/BlockContent.css'
 const { Panel } = Collapse
 
 export interface blockContentProps {

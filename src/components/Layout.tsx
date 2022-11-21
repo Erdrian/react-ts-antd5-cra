@@ -1,19 +1,17 @@
 import { MenuUnfoldOutlined, MenuFoldOutlined, LogoutOutlined, SettingOutlined } from '@ant-design/icons'
-import { Avatar, Dropdown, Form, Layout, Menu, MenuProps, message, Modal, Space } from 'antd'
+import { Avatar, Dropdown, Form, Layout, message, Modal, Space } from 'antd'
 import { useState, createElement } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 import Icon from './Icon'
 import Mymenu from './Menu'
-import '../css/Layout.css'
+import '../style/Layout.css'
 import fetchJson from '../utils/fetch'
 import { createFormItem, formItem } from '../utils/createFormItem'
 import { password } from '../utils/regexp'
 //----------------------------------------  ----------------------------------------
-// 用户头像下拉菜单|用户修改密码
-const UserMenu = () => {
-	const navigate = useNavigate()
-	const [form] = Form.useForm()
-	const items: Required<MenuProps>['items'] = [
+const HeaderRight = () => {
+	//---------------------------------------- props ----------------------------------------
+	const items = [
 		{
 			key: 'passedit',
 			label: '密码修改',
@@ -100,19 +98,18 @@ const UserMenu = () => {
 			},
 		},
 	]
+	const navigate = useNavigate()
+	const [form] = Form.useForm()
 	//---------------------------------------- state ----------------------------------------
 	const [open, setopen] = useState(false)
-	//---------------------------------------- 方法 ----------------------------------------
-	async function loginOut() {
-		let { ok } = await fetchJson('/sys/logout')
-		if (ok) {
-			localStorage.removeItem('token')
-			navigate('/login')
-			message.success('您已退出登录')
-		}
+	//---------------------------------------- void ----------------------------------------
+	function loginOut() {
+		localStorage.removeItem('token')
+		navigate('/login')
+		message.success('您已退出登录')
 	}
 	const submit = () => {
-		form.validateFields().then(async (value:any) => {
+		form.validateFields().then(async (value: any) => {
 			let { username } = JSON.parse(localStorage.getItem('UserInfo') || '{}')
 			let { ok } = await fetchJson('/sys/user/updatePassword', {
 				method: 'PUT',
@@ -127,29 +124,23 @@ const UserMenu = () => {
 	const onCancel = () => {
 		setopen(false)
 	}
-	return (
-		<>
-			<Modal title='修改密码' open={open} onOk={submit} onCancel={onCancel} destroyOnClose>
-				<Form labelCol={{ span: 4 }} wrapperCol={{ span: 20 }} form={form} preserve={false}>
-					{formItems.map((formItem, i) => createFormItem(formItem, i))}
-				</Form>
-			</Modal>
-			<Menu className='avatardropdown' items={items} />
-		</>
-	)
-}
-const HeaderRight = () => {
-	//---------------------------------------- props ----------------------------------------
 	const userInfo = JSON.parse(localStorage.getItem('UserInfo') || '{}')
 	return (
-		<Space size='small' className='layout-header-right'>
-			<Dropdown overlay={UserMenu()} placement='bottomLeft'>
-				<div>
-					<Avatar size={36} src={userInfo.avatar || ''} className='user-avatar' />
-					<span className='user-name'>{userInfo.realname || null}</span>
-				</div>
-			</Dropdown>
-		</Space>
+		<>
+			<Space size='small' className='layout-header-right'>
+				<Dropdown menu={{ items }} placement='bottomLeft'>
+					<div>
+						<Avatar size={36} src={userInfo.avatar || ''} className='user-avatar' />
+						<span className='user-name'>{userInfo.realname || null}</span>
+					</div>
+				</Dropdown>
+				<Modal title='修改密码' open={open} onOk={submit} onCancel={onCancel} destroyOnClose>
+					<Form labelCol={{ span: 4 }} wrapperCol={{ span: 20 }} form={form} preserve={false}>
+						{formItems.map((formItem, i) => createFormItem(formItem, i))}
+					</Form>
+				</Modal>
+			</Space>
+		</>
 	)
 }
 export default () => {

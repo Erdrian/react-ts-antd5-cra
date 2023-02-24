@@ -149,7 +149,7 @@ export default () => {
 	const menuProps = JSON.parse(localStorage.getItem('Menu') || '[]')
 	const navigate = useNavigate()
 	const logo = <Icon type='icon-fengkong' className='logo-icon' />
-	const title = '安责险风控系统'
+	const title = '模板系统'
 	//---------------------------------------- state ----------------------------------------
 	const [collapsed, setcollapased] = useState(false)
 	return (

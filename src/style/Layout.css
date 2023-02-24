@@ -15,6 +15,7 @@
 .logo-title {
 	flex-shrink: 0;
 	font-size: 20px;
+	line-height: 28px;
 	margin-left: 16px;
 	font-weight: bold;
 }

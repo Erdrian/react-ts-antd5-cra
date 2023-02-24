@@ -20,6 +20,8 @@ import {
 	InputNumber,
 	Cascader,
 	CascaderProps,
+	Slider,
+	SliderSingleProps,
 } from 'antd'
 import MyUpload, { MyUploadProps } from '../components/Upload'
 import RichText from '../components/RichText'
@@ -30,6 +32,22 @@ import { TextAreaProps, PasswordProps } from 'antd/es/input'
 //----------------------------------------  ----------------------------------------
 const { Item } = Form
 //----------------------------------------  ----------------------------------------
+interface SliderRange {
+	draggableTrack?: boolean
+}
+interface SliderRangeProps
+	extends Omit<
+		SliderSingleProps,
+		'range' | 'value' | 'defaultValue' | 'onChange' | 'onAfterChange' | 'handleStyle' | 'trackStyle'
+	> {
+	range: true | SliderRange
+	value?: [number, number]
+	defaultValue?: [number, number]
+	onChange?: (value: [number, number]) => void
+	onAfterChange?: (value: [number, number]) => void
+	handleStyle?: React.CSSProperties[]
+	trackStyle?: React.CSSProperties[]
+}
 type formItemType =
 	| 'input'
 	| 'inputNumber'
@@ -45,21 +63,25 @@ type formItemType =
 	| 'richText'
 	| 'group'
 	| 'cascader'
+	| 'slider'
 export interface formItem {
 	type: formItemType
-	inputOptions?: InputProps &
-		InputNumberProps &
-		SelectProps &
-		MyUploadProps &
-		TextAreaProps &
-		PasswordProps &
-		SearchSelectProps &
-		DatePickerProps &
-		RadioProps &
-		RadioGroupProps &
-		SwitchProps &
-		TreeSelectProps &
-		CascaderProps<any>
+	inputOptions?:
+		| InputProps
+		| InputNumberProps
+		| SelectProps
+		| MyUploadProps
+		| TextAreaProps
+		| PasswordProps
+		| SearchSelectProps
+		| DatePickerProps
+		| RadioProps
+		| RadioGroupProps
+		| SwitchProps
+		| TreeSelectProps
+		| CascaderProps<any>
+		| SliderSingleProps
+		| SliderRangeProps
 	itemOptions: FormItemProps
 	span?: number
 	group?: formItem[]
@@ -130,6 +152,9 @@ export const createFormItem = (formItem: formItem, index?: number) => {
 		case 'cascader':
 			inputNode = <Cascader options={divisionOptions} {...(inputOptions as CascaderProps<any>)} />
 			break
+		case 'slider':
+			inputNode = <Slider {...(inputOptions as SliderRangeProps | SliderSingleProps)} />
+			break
 		case 'group':
 			inputNode = (
 				<Row gutter={8}>
@@ -148,7 +173,7 @@ export const createFormItem = (formItem: formItem, index?: number) => {
 			)
 			break
 		default:
-			inputNode = <Input {...inputOptions} />
+			inputNode = <Input {...(inputOptions as InputProps)} />
 	}
 	if (type === 'group') {
 		itemOptions.style = { marginBottom: 0 }

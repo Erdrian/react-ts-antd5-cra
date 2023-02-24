@@ -4,7 +4,6 @@ import { UserOutlined, LockOutlined, SafetyCertificateOutlined } from '@ant-desi
 import fetchJson from '../utils/fetch'
 import { MenuPropsFromAuth } from './Menu'
 import '../style/LoginForm.css'
-import { SizeType } from 'antd/es/config-provider/SizeContext'
 //---------------------------------------- 类型 ----------------------------------------
 interface loginFrom {
 	username: string
@@ -56,7 +55,7 @@ export const getAera = async () => {
 	}
 }
 
-const LoginForm = ({ size = 'large', onLogin }: { size?: SizeType; onLogin?: Function }) => {
+const LoginForm = ({ size = 'large', onLogin }: { size?: 'large' | 'middle' | 'small'; onLogin?: Function }) => {
 	//---------------------------------------- props ----------------------------------------
 	const [form] = Form.useForm()
 	//---------------------------------------- state ----------------------------------------

@@ -12,7 +12,7 @@
 	background-color: #a8a8a8;
 }
 
-/* 隐藏高德的logo */
+/* 隐藏高德地图的logo */
 #amap-container > a.amap-logo {
 	display: none !important;
 }

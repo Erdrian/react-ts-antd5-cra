@@ -8,15 +8,16 @@ export const DownloadBase = `${BASE}/api/File/Download`
 export const PublicBase = `${BASE}/api/File/Show`
 export const UploadBase = `${BASE}/api/File/Upload`
 //---------------------------------------- type ----------------------------------------
-export interface MyUploadProps extends UploadProps {
+export interface MyUploadProps<T = any> extends UploadProps {
 	onFileChange?: Function
 	ref?: Ref<any>
 	placeholder?: string
+	value: T
+	valueFormatter?: (file: UploadFile) => T
 }
-export type Enclosure_Form = {
-	[key: string]: { fileIds: string[] }
-}
-export type Enclosure_Detail = { fileId: string; fileTitle: string }
+
+export type uploadValue = { fileId: string; fileTitle: string }
+
 type response = {
 	code: string
 	message: string
@@ -24,77 +25,20 @@ type response = {
 	success: boolean
 }
 //----------------------------------------  ----------------------------------------
-// 从文件列表获取fileIds数组
-export const getFileIds = (
-	fileList: UploadFile<response>[]
-): {
-	ok: boolean
-	result?: { fileId: string }[]
-	msg?: string
-} => {
-	let fileIds: { fileId: string }[] = []
-	if (!fileList) return { ok: true, result: fileIds }
-	try {
-		fileList.forEach((file) => {
-			let { uid, status, name } = file
-			if (status !== 'done') {
-				throw new Error(`文件：${name}，上传状态异常`)
-			}
-			fileIds.push({ fileId: uid })
-		})
-	} catch (e: any) {
-		return { ok: false, msg: e.message as string }
-	}
-	return { ok: true, result: fileIds }
-}
-// 表单中的文件列表转化为表单需要的附件格式
-export const getFileIdsFromForm = (value: {
-	[key: string]: UploadFile<response>[]
-}): {
-	success: boolean
-	result?: Enclosure_Form
-	msg?: string
-} => {
-	if (!value) return { success: false, msg: '附件非法' }
-	let res = {}
-	try {
-		Object.entries(value).forEach((item) => {
-			let [key, value] = item
-			let { ok, msg, result } = getFileIds(value)
-			if (ok) {
-				res[key] = result
-			} else {
-				throw new Error(msg)
-			}
-		})
-		return { success: true, result: res }
-	} catch (e: any) {
-		return { success: false, msg: e.message as string }
-	}
-}
-//根据ID获取已上传的附件列表
-export const getFileListById = (value: Enclosure_Detail[]): UploadFile[] =>
-	value.map(({ fileId, fileTitle }) => ({
-		uid: fileId,
-		name: fileTitle,
-		status: 'done',
-		url: `${DownloadBase}?fileId=${fileId}&access_token=${localStorage.getItem('token') || ''}`,
-	}))
+
+
 //----------------------------------------  ----------------------------------------
-export default forwardRef<any, MyUploadProps>((props, ref) => {
+export default forwardRef<any, MyUploadProps<uploadValue[]>>((props, ref) => {
 	//---------------------------------------- props ----------------------------------------
 	const Authorization = `Bearer ${localStorage.getItem('token') || ''}`
-	let { onFileChange, listType = 'text', placeholder } = props
+	let { onFileChange, listType = 'text', placeholder, value, valueFormatter } = props
 	//---------------------------------------- state ----------------------------------------
 	const [fileList, setfileList] = useState<UploadFile[]>([])
 	//---------------------------------------- effect ----------------------------------------
 
 	useEffect(() => {
-		if (props.fileList) {
-			setfileList(props.fileList)
-			onFileChange?.(props.fileList)
-		}
-	}, [props.fileList])
+		value && setfileList(getFileListByValue(value))
+	}, [value])
 	//---------------------------------------- 方法 ----------------------------------------
 	const onChange: UploadProps<response>['onChange'] = ({ file, fileList }) => {
 		let { status, name, response } = file
@@ -124,11 +68,26 @@ export default forwardRef<any, MyUploadProps>((props, ref) => {
 				break
 		}
 		setfileList(fileList)
-		if (fileList.length === 0) {
-			onFileChange?.(undefined)
-		} else {
-			onFileChange?.(fileList)
+		if (status !== 'uploading') {
+			onFileChange?.(getValueByFileList(fileList))
 		}
+	}
+	const getFileListByValue = (value: uploadValue[]): UploadFile[] =>
+		value.map(({ fileId, fileTitle }) => ({
+			uid: fileId,
+			name: fileTitle,
+			status: 'done',
+			url: `${DownloadBase}?fileId=${fileId}&access_token=${localStorage.getItem('token') || ''}`,
+		}))
+	const getValueByFileList = (filelist: UploadFile<response>[]) => {
+		let _value: {}[] | undefined = []
+		filelist.forEach((file) => {
+			if (file.status === 'done') {
+				_value?.push(valueFormatter?.(file) || { fileId: file.uid, fileName: file.name })
+			}
+		})
+		_value = _value.length > 0 ? _value : undefined
+		return _value
 	}
 	const beforeUpload = (file: UploadFile) => {
 		const accept = ['image/png', 'image/jpeg', 'image/jpg', 'application/pdf']

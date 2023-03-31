@@ -1,8 +1,20 @@
 import { ConfigProvider, Descriptions, Image, message, Modal, Space } from 'antd'
-import { DownloadBase, Enclosure_Detail } from '../components/Upload'
+import { DownloadBase, uploadValue } from '../components/Upload'
 import zhCN from 'antd/es/locale/zh_CN'
 import { EyeOutlined } from '@ant-design/icons'
 import { ReactNode } from 'react'
+
+//---------------------------------------- 防抖 ----------------------------------------
+export function debounce(fn: Function, delay: number = 300) {
+	let timer: null | number = null
+	return () => {
+		if (timer) {
+			clearTimeout(timer)
+			timer = null
+		}
+		timer = window.setTimeout(fn, delay)
+	}
+}
 
 //---------------------------------------- 生成随机密码密码 ----------------------------------------
 export const randomPassword = (length: number) => {
@@ -92,7 +104,7 @@ export const scrollToAnchor = (hash: string) => {
 }
 //---------------------------------------- 附件下载相关 ----------------------------------------
 // 使用文件id，从服务器请求附件，返回blob对象
-export const getBlobFromFileId = async (fileId: string): Promise<Blob> => {
+export const getBlobByFileId = async (fileId: string): Promise<Blob> => {
 	const Authorization = `Bearer ${localStorage.getItem('token') || ''}`
 	let res = await fetch(`${DownloadBase}?fileId=${fileId}`, { method: 'GET', headers: { Authorization } })
 	let blob = await res.blob()
@@ -154,54 +166,51 @@ type URLCACHE = {
 	url: string
 	type: string
 }
-let timer: null | ReturnType<typeof setTimeout> = null
+
 // 附件点击回调函数
-export const handleDownload = (args: Enclosure_Detail | undefined, onFinish?: Function) => {
-	const URLCACHE = JSON.parse(localStorage.getItem('URLCACHE') || '[]') as URLCACHE[]
-	const delay = 200
+export const handleDownload = (args: uploadValue | undefined, onFinish?: Function) => {
+	let timer: null | ReturnType<typeof setTimeout> = null
 	if (timer) {
 		clearTimeout(timer)
 		timer = null
 	}
-	const fake = () => {
-		if (!args)
-			return () => {
-				message.error('获取下载地址失败，请刷新页面后重试')
+	return () => {
+		const URLCACHE = JSON.parse(localStorage.getItem('URLCACHE') || '[]') as URLCACHE[]
+		const delay = 200
+		const fake = () => {
+			if (!args)
+				return () => {
+					message.error('获取下载地址失败，请刷新页面后重试')
+				}
+			let { fileId, fileTitle } = args
+			// 本地缓存有文件时，直接展示文件
+			let tar = URLCACHE.find((element) => element.fileId === fileId)
+			if (tar) {
+				let { url, type } = tar
+				handlePreview(url, type, fileTitle)
+				return
 			}
-		let { fileId, fileTitle } = args
-		// 本地缓存有文件时，直接展示文件
-		let tar = URLCACHE.find((element) => element.fileId === fileId)
-		if (tar) {
-			let { url, type } = tar
-			handlePreview(url, type, fileTitle)
-			return
+			// 本地没有缓存时，请求服务器
+			const hide = message.loading('附件加载中...', 0)
+			getBlobByFileId(fileId).then((blob) => {
+				hide()
+				let { type } = blob
+				let url = window.URL.createObjectURL(blob)
+				URLCACHE.push({ fileId, url, type })
+				localStorage.setItem('URLCACHE', JSON.stringify(URLCACHE))
+				handlePreview(url, type, fileTitle)
+				onFinish?.()
+			})
 		}
-		// 本地没有缓存时，请求服务器
-		const hide = message.loading('附件加载中...', 0)
-		getBlobFromFileId(fileId).then((blob) => {
-			hide()
-			let { type } = blob
-			let url = window.URL.createObjectURL(blob)
-			URLCACHE.push({ fileId, url, type })
-			localStorage.setItem('URLCACHE', JSON.stringify(URLCACHE))
-			handlePreview(url, type, fileTitle)
-			onFinish?.()
-		})
+		timer = setTimeout(fake, delay)
 	}
-	timer = setTimeout(fake, delay)
 }
 // 附件按钮
-export const enclosureButtonRender = (value: Enclosure_Detail[] | undefined) => {
+export const enclosureButtonRender = (value: uploadValue[] | undefined) => {
 	if (!value) return <></>
 	else {
 		return value.map((item, i) => (
-			<span
-				className='download-link'
-				key={i}
-				onClick={() => {
-					handleDownload(item)
-				}}
-			>
+			<span className='download-link' key={i} onClick={handleDownload(item)}>
 				{value && value.length > 1 ? `附件${i + 1}` : '查看'}
 			</span>
 		))

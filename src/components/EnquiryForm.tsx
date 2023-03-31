@@ -78,6 +78,10 @@ export default forwardRef<any, EnquiryFormProps>((props, ref) => {
 			dataProcess(records)
 			setdataSource(records)
 			setTotal(total)
+			navigate(pathname, {
+				state: { filter_history: filter, page_history: page, pageSize_history: pageSize },
+				replace: true,
+			})
 		}
 		setIsloading(false)
 	}
@@ -85,28 +89,17 @@ export default forwardRef<any, EnquiryFormProps>((props, ref) => {
 	// 暴露表格数据获取方法给父组件
 	useImperativeHandle(ref, () => ({ getData }))
 
-	// 搜索时跳转url的公共方法
-	const navigateWithSearch = (filter: {}, page: number, pageSize: number) => {
-		navigate(pathname, {
-			state: { filter_history: filter, page_history: page, pageSize_history: pageSize },
-			replace: true,
-		})
-	}
 	// 搜素时的回调函数
 	const onSearch = useCallback((filter: {}) => {
 		setCurrent(1)
 		setFilter(filter)
 		getData({ page: 1, pageSize, filter })
-		navigateWithSearch(filter, 1, pageSize)
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 	// 重置搜索时的回调函数
 	const onReset = useCallback(() => {
 		setCurrent(1)
 		setFilter({})
 		getData({ page: 1, pageSize, filter: {} })
-		navigateWithSearch({}, 1, 10)
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
 	const pagination = {
@@ -116,7 +109,6 @@ export default forwardRef<any, EnquiryFormProps>((props, ref) => {
 			setCurrent(page)
 			setPageSize(pageSize)
 			getData({ page, pageSize, filter })
-			navigateWithSearch(filter, page, pageSize)
 		},
 		current,
 		pageSize,

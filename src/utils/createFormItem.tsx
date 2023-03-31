@@ -86,16 +86,10 @@ export interface formItem {
 	span?: number
 	group?: formItem[]
 }
-const normFile = (e: any) => {
-	if (Array.isArray(e)) {
-		return e
-	}
-	return e && e.fileList
-}
+
 const FormUploadProps = {
-	valuePropName: 'fileList',
-	getValueFromEvent: normFile,
 	trigger: 'onFileChange',
+	validateTrigger: 'onFileChange',
 }
 
 export const createFormItem = (formItem: formItem, index?: number) => {
@@ -107,10 +101,7 @@ export const createFormItem = (formItem: formItem, index?: number) => {
 			break
 		case 'inputNumber':
 			inputNode = (
-				<InputNumber
-					{...(inputOptions as InputNumberProps)}
-					style={{ width: '100%', ...inputOptions?.style }}
-				/>
+				<InputNumber {...(inputOptions as InputNumberProps)} style={{ width: '100%', ...inputOptions?.style }} />
 			)
 			break
 		case 'select':
@@ -131,10 +122,7 @@ export const createFormItem = (formItem: formItem, index?: number) => {
 			break
 		case 'datePicker':
 			inputNode = (
-				<DatePicker
-					{...(inputOptions as DatePickerProps)}
-					style={{ width: '100%', ...inputOptions?.style }}
-				/>
+				<DatePicker {...(inputOptions as DatePickerProps)} style={{ width: '100%', ...inputOptions?.style }} />
 			)
 			break
 		case 'radio':

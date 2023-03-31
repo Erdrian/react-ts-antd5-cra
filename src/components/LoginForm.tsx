@@ -26,6 +26,7 @@ type authFromInterface = {
 	describe: string
 	type?: number
 }
+
 //获取权限相关
 export const getAuth = async () => {
 	let { ok, msg, result } = await fetchJson('/sys/permission/getUserPermissionByToken?notJeecg=1')

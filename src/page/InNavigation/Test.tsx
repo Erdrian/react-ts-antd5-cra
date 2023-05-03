@@ -1,14 +1,17 @@
 import { Button, Modal, Form, Timeline } from 'antd'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import AMap from '../../components/AMap'
 import { createFormItem, formItem } from '../../utils/createFormItem'
 export default () => {
 	const [open, setopen] = useState(false)
 	const [form] = Form.useForm()
+	const file = useRef<any>()
 	const handleOpen = () => {
 		setopen(true)
 	}
 	const handleClose = () => {
+		console.log(file.current.value)
+
 		setopen(false)
 	}
 	const formItem: formItem = {
@@ -19,7 +22,6 @@ export default () => {
 		itemOptions: {
 			label: '进度',
 			name: 'percent',
-			// initialValue: [0, 100],
 		},
 	}
 	return (
@@ -33,7 +35,7 @@ export default () => {
 				onCancel={handleClose}
 				okButtonProps={{
 					onClick() {
-						console.log(form.getFieldsValue())
+						console.log(file.current);
 					},
 				}}
 			>
@@ -41,6 +43,10 @@ export default () => {
 					<AMap />
 				</div>
 				<Form form={form}>{createFormItem(formItem)}</Form>
+				<form action='http://localhost:8080/upload' method='post' encType='multipart/form-data'>
+					<input type='file' name='file'></input>
+					<input type='submit'></input>
+				</form>
 			</Modal>
 			<Timeline
 				mode='left'

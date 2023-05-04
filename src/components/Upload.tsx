@@ -1,12 +1,13 @@
 import { useState, forwardRef, useEffect, Ref, useImperativeHandle } from 'react'
 import { UploadOutlined, PlusOutlined } from '@ant-design/icons'
 import { Upload, Button, message, UploadFile, UploadProps } from 'antd'
-import fetchJson, { BASE } from '../utils/fetch'
+import fetchJson, {  } from '../utils/fetch'
 import { handleDownload } from '../utils/common'
 //----------------------------------------  ----------------------------------------
+const BASE = 'http://localhost/8080'
 export const DownloadBase = `${BASE}/api/File/Download`
 export const PublicBase = `${BASE}/api/File/Show`
-export const UploadBase = `${BASE}/api/File/Upload`
+export const UploadBase = `${BASE}/upload`
 //---------------------------------------- type ----------------------------------------
 export interface MyUploadProps<T = any> extends UploadProps {
 	onFileChange?: Function

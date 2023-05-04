@@ -62,7 +62,7 @@ export default ({ menuProps, collapsed }: { menuProps: MenuPropsFromAuth[]; coll
 	//---------------------------------------- effect ----------------------------------------
 	// 自动展开当前路由的菜单
 	useEffect(() => {
-		let key: string = pathname.split('/').filter((i) => i)[0] || '/'
+		let key: string = pathname.split('/').filter((i: any) => i)[0] || '/'
 		setselectedKeys([key])
 		setopenKeys(routeMap[key] || [])
 	}, [pathname, collapsed])

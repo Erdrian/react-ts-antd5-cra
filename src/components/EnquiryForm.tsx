@@ -58,16 +58,12 @@ export default forwardRef<any, EnquiryFormProps>((props, ref) => {
 	const getData = async (props: { filter: {}; page: number; pageSize: number }) => {
 		setIsloading(true)
 		let { filter, page, pageSize } = props
+		let _filter = { ...filter, ...(filter_api || {}) }
 		//筛选条件
 		let filterStr = ''
-		for (let key in filter) {
-			if (filter[key] === undefined) continue
-			filterStr += `&${key}=${filter[key]}`
-		}
-		if (filter_api) {
-			for (let key in filter_api) {
-				filterStr += `&${key}=${filter_api[key]}`
-			}
+		for (let key in _filter) {
+			if (_filter[key] === undefined) continue
+			filterStr += `&${key}=${_filter[key]}`
 		}
 		//排序
 		let sort = sortRule ? `&column=${sortRule.column}&order=${sortRule.order}` : ''
@@ -118,7 +114,7 @@ export default forwardRef<any, EnquiryFormProps>((props, ref) => {
 		<div className={!detail ? 'list-table-content' : ''}>
 			{/* 搜索区 */}
 			<div className='table-search'>
-				<SearchForm formItems={searchItems || []} onSearch={onSearch} onReset={onReset} />
+				<SearchForm formItems={searchItems || []} onSearch={onSearch} onReset={onReset} value={filter} />
 			</div>
 			{content}
 			{/* 表格 */}

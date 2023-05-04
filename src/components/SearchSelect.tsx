@@ -54,7 +54,7 @@ const SearchSelect = (props: SearchSelectProps) => {
 		}
 	}
 	const handleChange = (value: any) => {
-		onValueChange && onValueChange(value)
+		onValueChange?.(value)
 		setValue(value)
 	}
 	return (

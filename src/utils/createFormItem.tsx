@@ -87,11 +87,6 @@ export interface formItem {
 	group?: formItem[]
 }
 
-const FormUploadProps = {
-	trigger: 'onFileChange',
-	validateTrigger: 'onFileChange',
-}
-
 export const createFormItem = (formItem: formItem, index?: number) => {
 	let { type, inputOptions, itemOptions, group } = formItem
 	let inputNode
@@ -108,7 +103,7 @@ export const createFormItem = (formItem: formItem, index?: number) => {
 			inputNode = <Select {...(inputOptions as SelectProps)} />
 			break
 		case 'upload':
-			itemOptions = { ...itemOptions, ...FormUploadProps }
+			itemOptions = { ...itemOptions, trigger: 'onFileChange', validateTrigger: 'onFileChange' }
 			inputNode = <MyUpload {...(inputOptions as MyUploadProps)} />
 			break
 		case 'textArea':
@@ -129,6 +124,7 @@ export const createFormItem = (formItem: formItem, index?: number) => {
 			inputNode = <Radio.Group {...(inputOptions as RadioProps & RadioGroupProps)} />
 			break
 		case 'switch':
+			itemOptions = { ...itemOptions, valuePropName: 'checked' }
 			inputNode = <Switch {...(inputOptions as SwitchProps)} />
 			break
 		case 'treeSelect':
@@ -164,7 +160,7 @@ export const createFormItem = (formItem: formItem, index?: number) => {
 			inputNode = <Input {...(inputOptions as InputProps)} />
 	}
 	if (type === 'group') {
-		itemOptions.style = { marginBottom: 0 }
+		itemOptions.style = { ...(itemOptions.style || {}), marginBottom: 0 }
 	}
 	return (
 		<Item {...itemOptions} key={index}>

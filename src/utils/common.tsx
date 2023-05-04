@@ -3,6 +3,7 @@ import { DownloadBase, uploadValue } from '../components/Upload'
 import zhCN from 'antd/es/locale/zh_CN'
 import { EyeOutlined } from '@ant-design/icons'
 import { ReactNode } from 'react'
+import { DescriptionsItemProps } from 'antd/es/descriptions/Item'
 
 //---------------------------------------- 防抖 ----------------------------------------
 export function debounce(fn: Function, delay: number = 300) {
@@ -168,42 +169,34 @@ type URLCACHE = {
 }
 
 // 附件点击回调函数
-export const handleDownload = (args: uploadValue | undefined, onFinish?: Function) => {
-	let timer: null | ReturnType<typeof setTimeout> = null
-	if (timer) {
-		clearTimeout(timer)
-		timer = null
-	}
-	return () => {
+export const handleDownload = (file: uploadValue | undefined, onFinish?: Function) => {
+	const _download = () => {
 		const URLCACHE = JSON.parse(localStorage.getItem('URLCACHE') || '[]') as URLCACHE[]
-		const delay = 200
-		const fake = () => {
-			if (!args)
-				return () => {
-					message.error('获取下载地址失败，请刷新页面后重试')
-				}
-			let { fileId, fileTitle } = args
-			// 本地缓存有文件时，直接展示文件
-			let tar = URLCACHE.find((element) => element.fileId === fileId)
-			if (tar) {
-				let { url, type } = tar
-				handlePreview(url, type, fileTitle)
-				return
+		if (!file)
+			return () => {
+				message.error('获取下载地址失败，请刷新页面后重试')
 			}
-			// 本地没有缓存时，请求服务器
-			const hide = message.loading('附件加载中...', 0)
-			getBlobByFileId(fileId).then((blob) => {
-				hide()
-				let { type } = blob
-				let url = window.URL.createObjectURL(blob)
-				URLCACHE.push({ fileId, url, type })
-				localStorage.setItem('URLCACHE', JSON.stringify(URLCACHE))
-				handlePreview(url, type, fileTitle)
-				onFinish?.()
-			})
+		let { fileId, fileTitle } = file
+		// 本地缓存有文件时，直接展示文件
+		let tar = URLCACHE.find((element) => element.fileId === fileId)
+		if (tar) {
+			let { url, type } = tar
+			handlePreview(url, type, fileTitle)
+			return
 		}
-		timer = setTimeout(fake, delay)
+		// 本地没有缓存时，请求服务器
+		const hide = message.loading('附件加载中...', 0)
+		getBlobByFileId(fileId).then((blob) => {
+			hide()
+			let { type } = blob
+			let url = window.URL.createObjectURL(blob)
+			URLCACHE.push({ fileId, url, type })
+			localStorage.setItem('URLCACHE', JSON.stringify(URLCACHE))
+			handlePreview(url, type, fileTitle)
+			onFinish?.()
+		})
 	}
+	return debounce(_download, 200)
 }
 // 附件按钮
 export const enclosureButtonRender = (value: uploadValue[] | undefined) => {
@@ -221,6 +214,7 @@ export const enclosureButtonRender = (value: uploadValue[] | undefined) => {
 export type customDescriptionItems = {
 	label: string
 	dataIndex: string
+	descriptionsItemProps?: DescriptionsItemProps
 	render?: (value?: any, data?: { [key: string]: any }) => ReactNode
 }
 export const DescriptionItemsRender = (
@@ -228,9 +222,9 @@ export const DescriptionItemsRender = (
 	data: { [key: string]: any }
 ): ReactNode => {
 	return descriptionItems.map((descriptionItem, i) => {
-		let { label, dataIndex, render } = descriptionItem
+		let { label, dataIndex, render, descriptionsItemProps } = descriptionItem
 		return (
-			<Descriptions.Item label={label} key={i}>
+			<Descriptions.Item label={label} key={i} {...(descriptionsItemProps || {})}>
 				{render ? render(data[dataIndex], data) : data[dataIndex]}
 			</Descriptions.Item>
 		)

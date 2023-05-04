@@ -2,6 +2,7 @@ import { Button, Modal, Form, Timeline } from 'antd'
 import { useState } from 'react'
 import AMap from '../../components/AMap'
 import { createFormItem, formItem } from '../../utils/createFormItem'
+import Upload from '../../components/Upload'
 export default () => {
 	const [open, setopen] = useState(false)
 	const [form] = Form.useForm()
@@ -24,6 +25,12 @@ export default () => {
 	}
 	return (
 		<>
+			<Form>
+				<Form.Item name='test' initialValue={[{ fileId: '12', fileTitle: '1234' }]}>
+					<Upload />
+				</Form.Item>
+			</Form>
+
 			<Button type='primary' onClick={handleOpen}>
 				开启地图
 			</Button>

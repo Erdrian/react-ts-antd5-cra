@@ -12,7 +12,7 @@ export interface MyUploadProps<T = any> extends UploadProps {
 	onFileChange?: Function
 	ref?: Ref<any>
 	placeholder?: string
-	value: T
+	value?: T
 	valueFormatter?: (file: UploadFile) => T
 }
 
@@ -26,7 +26,6 @@ type response = {
 }
 //----------------------------------------  ----------------------------------------
 
-
 //----------------------------------------  ----------------------------------------
 export default forwardRef<any, MyUploadProps<uploadValue[]>>((props, ref) => {
 	//---------------------------------------- props ----------------------------------------
@@ -34,9 +33,13 @@ export default forwardRef<any, MyUploadProps<uploadValue[]>>((props, ref) => {
 	let { onFileChange, listType = 'text', placeholder, value, valueFormatter } = props
 	//---------------------------------------- state ----------------------------------------
 	const [fileList, setfileList] = useState<UploadFile[]>([])
+	console.log(fileList);
+	
 	//---------------------------------------- effect ----------------------------------------
 
 	useEffect(() => {
+		console.log(value)
+
 		value && setfileList(getFileListByValue(value))
 	}, [value])
 	//---------------------------------------- 方法 ----------------------------------------
@@ -72,13 +75,26 @@ export default forwardRef<any, MyUploadProps<uploadValue[]>>((props, ref) => {
 			onFileChange?.(getValueByFileList(fileList))
 		}
 	}
-	const getFileListByValue = (value: uploadValue[]): UploadFile[] =>
-		value.map(({ fileId, fileTitle }) => ({
-			uid: fileId,
-			name: fileTitle,
-			status: 'done',
-			url: `${DownloadBase}?fileId=${fileId}&access_token=${localStorage.getItem('token') || ''}`,
-		}))
+	const getFileListByValue = (value: uploadValue[]): UploadFile[] => {
+		let result: UploadFile[] = [...fileList]
+		for (let { fileId, fileTitle } of value) {
+			let tar = fileList.find(({ uid }) => uid === fileId)
+			if (tar) continue
+			result.push({
+				uid: fileId,
+				name: fileTitle,
+				status: 'done',
+				url: `${DownloadBase}?fileId=${fileId}&access_token=${localStorage.getItem('token') || ''}`,
+			})
+		}
+		// return value.map(({ fileId, fileTitle }) => ({
+		// 	uid: fileId,
+		// 	name: fileTitle,
+		// 	status: 'done',
+		// 	url: `${DownloadBase}?fileId=${fileId}&access_token=${localStorage.getItem('token') || ''}`,
+		// }))
+		return result
+	}
 	const getValueByFileList = (filelist: UploadFile<response>[]) => {
 		let _value: {}[] | undefined = []
 		filelist.forEach((file) => {
@@ -107,7 +123,7 @@ export default forwardRef<any, MyUploadProps<uploadValue[]>>((props, ref) => {
 
 	const onPreview = (file: UploadFile) => {
 		let { uid, name } = file
-		handleDownload({ fileId: uid, fileTitle: name })
+		handleDownload({ fileId: uid, fileTitle: name })()
 	}
 
 	const onRemove = async (file: UploadFile) => {

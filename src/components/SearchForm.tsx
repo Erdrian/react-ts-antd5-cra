@@ -3,36 +3,28 @@ import { Fragment, useEffect, useState } from 'react'
 import { Form, Button, Row, Col } from 'antd'
 import { UpOutlined, DownOutlined } from '@ant-design/icons'
 import { createFormItem, formItem } from '../utils/createFormItem'
-import { filterInHistory } from './EnquiryForm'
 import '../style/SearchForm.css'
-import { useLocation } from 'react-router-dom'
 
 type searchFormProps = {
 	formItems: formItem[]
 	onSearch: Function
 	onReset: Function
+	value: any
 }
 
-export default ({ formItems, onSearch, onReset }: searchFormProps) => {
+export default ({ formItems, onSearch, onReset, value }: searchFormProps) => {
+	if (formItems.length === 0) return <></>
 	//---------------------------------------- state ----------------------------------------
 	const [showmore, setshowmore] = useState(false)
 	//---------------------------------------- props ----------------------------------------
 	const [form] = Form.useForm()
 	const defaultSerachItemsNum = 3
-	const location = useLocation()
 	const limit = !showmore ? defaultSerachItemsNum - 1 : 99
 	//---------------------------------------- effect ----------------------------------------
 	useEffect(() => {
-		const state = location.state as filterInHistory
-		const filter = state?.filter_history
-		if (!filter) return
-		if (Object.keys(filter).length === 0) {
-			form.resetFields()
-		} else {
-			form.setFieldsValue(filter)
-		}
-	})
-	if (formItems.length === 0) return <></>
+		form.resetFields()
+		form.setFieldsValue(value)
+	}, [value])
 	return (
 		<Form className='table-search-form' form={form} labelCol={{ span: 5 }} wrapperCol={{ span: 19 }}>
 			<Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32, xl: 24, xxl: 16 }}>
@@ -46,17 +38,12 @@ export default ({ formItems, onSearch, onReset }: searchFormProps) => {
 					)
 				)}
 				<Col className='table-search-action'>
-					<Button
-						type='primary'
-						style={{ marginRight: '8px' }}
-						onClick={() => onSearch(form.getFieldsValue(true))}
-					>
+					<Button type='primary' style={{ marginRight: '8px' }} onClick={() => onSearch(form.getFieldsValue(true))}>
 						查询
 					</Button>
 					<Button
 						onClick={() => {
 							setshowmore(false)
-							form.resetFields()
 							onReset()
 						}}
 					>

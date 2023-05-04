@@ -27,7 +27,7 @@
 	},
 	"scripts": {
 		"start": "react-scripts start",
-		"build": "crreact-scriptsaco build",
+		"build": "react-scripts build",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject",
 		"check": "npm-check -u",

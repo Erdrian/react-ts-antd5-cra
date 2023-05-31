@@ -34,13 +34,11 @@ export default forwardRef<any, MyUploadProps<uploadValue[]>>((props, ref) => {
 	let { onFileChange, listType = 'text', placeholder, value, valueFormatter } = props
 	//---------------------------------------- state ----------------------------------------
 	const [fileList, setfileList] = useState<UploadFile[]>([])
-	console.log(fileList);
+	// console.log(fileList);
 	
 	//---------------------------------------- effect ----------------------------------------
 
 	useEffect(() => {
-		console.log(value)
-
 		value && setfileList(getFileListByValue(value))
 	}, [value])
 	//---------------------------------------- 方法 ----------------------------------------

@@ -2,7 +2,6 @@ import { Button, Modal, Form, Timeline } from 'antd'
 import { useRef, useState } from 'react'
 import AMap from '../../components/AMap'
 import { createFormItem, formItem } from '../../utils/createFormItem'
-import Upload from '../../components/Upload'
 export default () => {
 	const [open, setopen] = useState(false)
 	const [form] = Form.useForm()
@@ -15,23 +14,40 @@ export default () => {
 
 		setopen(false)
 	}
-	const formItem: formItem = {
-		type: 'upload',
-		inputOptions: {
-			valueFormatter: (file) => ({ file: file.name }),
+	const formItems: formItem[] = [
+		{
+			type: 'switch',
+			itemOptions: {
+				label: '测试',
+				name: 'test',
+			},
 		},
-		itemOptions: {
-			label: '进度',
-			name: 'percent',
+		{
+			type: 'input',
+			itemOptions: {
+				label: '测试2',
+				name: 'test2',
+			},
 		},
-	}
+		{
+			type: 'upload',
+			inputOptions: {
+				valueFormatter: (file) => ({ file: file.name }),
+			},
+			itemOptions: {
+				label: '进度',
+				name: 'percent',
+				shouldUpdate(prevValues, nextValues, info) {
+					console.log({ prevValues, nextValues, info })
+					return true
+				},
+				required: form.getFieldValue('test'),
+			},
+		},
+	]
 	return (
 		<>
-			<Form>
-				<Form.Item name='test' initialValue={[{ fileId: '12', fileTitle: '1234' }]}>
-					<Upload />
-				</Form.Item>
-			</Form>
+			<Form form={form}>{formItems.map((formItem, i) => createFormItem(formItem, i))}</Form>
 
 			<Button type='primary' onClick={handleOpen}>
 				开启地图
@@ -42,18 +58,14 @@ export default () => {
 				onCancel={handleClose}
 				okButtonProps={{
 					onClick() {
-						console.log(file.current);
+						console.log(file.current)
 					},
 				}}
 			>
 				<div style={{ height: '600px' }}>
 					<AMap />
 				</div>
-				<Form form={form}>{createFormItem(formItem)}</Form>
-				<form action='http://localhost:8080/upload' method='post' encType='multipart/form-data'>
-					<input type='file' name='file'></input>
-					<input type='submit'></input>
-				</form>
+				<Form form={form}>{formItems.map((formItem, i) => createFormItem(formItem, i))}</Form>
 			</Modal>
 			<Timeline
 				mode='left'

@@ -19,3 +19,9 @@
 #amap-container > div.amap-copyright {
 	display: none !important;
 }
+
+.download-link {
+	color: #1890ff;
+	cursor: pointer;
+	margin-right: 16px;
+}

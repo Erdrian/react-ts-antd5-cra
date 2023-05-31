@@ -84,11 +84,12 @@ export default ({ menuProps, collapsed }: { menuProps: MenuPropsFromAuth[]; coll
 	}
 	// 判断菜单层级是否大于两级
 	function isMulti() {
-		Object.entries(routeMap).forEach(([_key, value]) => {
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		for (let [_, value] of Object.entries(routeMap)) {
 			if (value.length > 1) {
 				return true
 			}
-		})
+		}
 		return false
 	}
 	const onClick: MenuProps['onClick'] = (e) => {

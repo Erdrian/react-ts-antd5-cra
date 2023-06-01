@@ -66,6 +66,7 @@ export default () => {
 					<AMap />
 				</div>
 				<Form form={form}>{formItems.map((formItem, i) => createFormItem(formItem, i))}</Form>
+				1234
 			</Modal>
 			<Timeline
 				mode='left'

@@ -14,7 +14,7 @@ export default (porps: props) => {
 		id,
 		onDeleteOk,
 		children = (
-			<Button type='link' size='small' danger>
+			<Button type='link' danger>
 				删除
 			</Button>
 		),
@@ -23,12 +23,11 @@ export default (porps: props) => {
 		<Popconfirm
 			title={`你确定要删除吗？`}
 			onConfirm={async () => {
-				let { ok } = await fetchJson(api, {
-					method: 'POST',
-					body: JSON.stringify({ id }),
+				let { ok } = await fetchJson(`${api}?id=${id}`, {
+					method: 'DELETE',
 				})
 				if (ok) {
-					message.success('操作成功')
+					message.success('删除成功')
 					onDeleteOk?.()
 				}
 			}}

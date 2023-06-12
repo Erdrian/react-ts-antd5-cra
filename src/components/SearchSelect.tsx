@@ -1,34 +1,39 @@
 import { useEffect, useState } from 'react'
 import { Select, SelectProps } from 'antd'
 
-type option = {
+export type option = {
 	label: string
 	value: any
 }
 export interface SearchSelectProps extends SelectProps {
 	customProps?: {
-		initOption?: option[]
-		initValue?: string
-		getOptionData: (value: string) => Promise<option[]>
+		initOption?: { label: string; value: any }[]
+		getOptionData: (value: string) => Promise<{
+			data: { label: string; value: any }[]
+			query: string
+		}>
 		onValueChange?: (value: string) => void
 	}
 }
 
 const SearchSelect = (props: SearchSelectProps) => {
 	//---------------------------------------- props ----------------------------------------
-	let { initOption, initValue, getOptionData, onValueChange } = props.customProps || {}
+	let { initOption, getOptionData, onValueChange } = props.customProps || {}
+	let { onChange, value } = props
 	let inputOptions = { ...props }
 	delete inputOptions.customProps
 	let timeout: ReturnType<typeof setTimeout> | null
 	let currentValue: string
 	//---------------------------------------- state ----------------------------------------
 	const [data, setData] = useState<any[]>([])
-	const [value, setValue] = useState<string>()
+	const [_value, setValue] = useState<string>()
 	//---------------------------------------- effect ----------------------------------------
 	useEffect(() => {
 		initOption && setData(initOption)
-		initValue && setValue(initValue)
-	}, [initOption, initValue])
+	}, [initOption])
+	useEffect(() => {
+		setValue(value)
+	}, [value])
 	//---------------------------------------- 方法 ----------------------------------------
 	function fetch(value: string, callback: (data: any) => void) {
 		if (timeout) {
@@ -38,8 +43,8 @@ const SearchSelect = (props: SearchSelectProps) => {
 		currentValue = value
 		async function fake() {
 			if (getOptionData) {
-				let data = await getOptionData(value)
-				if (value === currentValue) {
+				let { query, data } = await getOptionData(value)
+				if (query === currentValue) {
 					callback(data)
 				}
 			}
@@ -56,19 +61,19 @@ const SearchSelect = (props: SearchSelectProps) => {
 	const handleChange = (value: any) => {
 		onValueChange?.(value)
 		setValue(value)
+		onChange?.(value, data)
 	}
 	return (
 		<Select
 			{...inputOptions}
 			showSearch
-			value={value}
+			value={_value}
 			defaultActiveFirstOption={false}
 			showArrow={false}
 			filterOption={false}
 			onSearch={handleSearch}
 			onChange={handleChange}
 			options={data}
-			notFoundContent={'暂无数据，请重新输入'}
 		></Select>
 	)
 }

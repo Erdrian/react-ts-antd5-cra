@@ -29,7 +29,7 @@ type authFromInterface = {
 
 //获取权限相关
 export const getAuth = async () => {
-	let { ok, msg, result } = await fetchJson('/sys/permission/getUserPermissionByToken?notJeecg=1')
+	let { ok, result } = await fetchJson('/sys/permission/getUserPermissionByToken?notJeecg=1')
 	if (ok) {
 		let { auth, menu }: { auth: authFromInterface[]; menu: MenuPropsFromAuth[] } = result
 		if (auth && menu) {
@@ -40,8 +40,6 @@ export const getAuth = async () => {
 			localStorage.setItem('Auth', JSON.stringify(authJson))
 			localStorage.setItem('Menu', JSON.stringify(menu))
 		}
-	} else {
-		message.error(msg)
 	}
 }
 //获取行政区域
@@ -181,14 +179,7 @@ const LoginForm = ({ size = 'large', onLogin }: { size?: 'large' | 'middle' | 's
 			</Form.Item>
 
 			<Form.Item>
-				<Button
-					type='primary'
-					htmlType='submit'
-					className='login-form-button'
-					block
-					loading={isLoading}
-					size='large'
-				>
+				<Button type='primary' htmlType='submit' className='login-form-button' block loading={isLoading} size='large'>
 					登录
 				</Button>
 			</Form.Item>

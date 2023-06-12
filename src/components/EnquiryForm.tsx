@@ -43,7 +43,7 @@ export default forwardRef<any, EnquiryFormProps>((props, ref) => {
 	//---------------------------------------- effect ----------------------------------------
 	useEffect(() => {
 		getData({ filter, page: current, pageSize })
-	}, [])
+	}, [filter_api])
 	//---------------------------------------- 方法 ----------------------------------------
 	// 数据处理，给每个数据加上key
 	const dataProcess = (records: []) => {
@@ -83,7 +83,11 @@ export default forwardRef<any, EnquiryFormProps>((props, ref) => {
 	}
 
 	// 暴露表格数据获取方法给父组件
-	useImperativeHandle(ref, () => ({ getData }))
+	useImperativeHandle(ref, () => ({
+		getData: () => {
+			getData({ filter, page: current, pageSize })
+		},
+	}))
 
 	// 搜素时的回调函数
 	const onSearch = useCallback((filter: {}) => {

@@ -86,12 +86,6 @@ export default forwardRef<any, MyUploadProps<uploadValue[]>>((props, ref) => {
 				url: `${DownloadBase}?fileId=${fileId}&access_token=${localStorage.getItem('token') || ''}`,
 			})
 		}
-		// return value.map(({ fileId, fileTitle }) => ({
-		// 	uid: fileId,
-		// 	name: fileTitle,
-		// 	status: 'done',
-		// 	url: `${DownloadBase}?fileId=${fileId}&access_token=${localStorage.getItem('token') || ''}`,
-		// }))
 		return result
 	}
 	const getValueByFileList = (filelist: UploadFile<response>[]) => {

@@ -1,7 +1,6 @@
 import { Collapse } from 'antd'
 import { ReactNode } from 'react'
 import '../style/BlockContent.css'
-const { Panel } = Collapse
 
 export interface blockContentProps {
 	title: string
@@ -22,21 +21,15 @@ export default (props: blockContentProps) => {
 			defaultActiveKey={defaultActive ? '1' : undefined}
 			className={`site-collapse-custom-collapse ${className}`}
 			style={{ marginBottom: '12px' }}
-		>
-			<Panel
-				{...panelProps}
-				key='1'
-				showArrow={false}
-				header={
-					<span
-						className='collapse-panel-title'
-					>
-						{title}
-					</span>
-				}
-			>
-				{children}
-			</Panel>
-		</Collapse>
+			items={[
+				{
+					...panelProps,
+					key: '1',
+					showArrow: false,
+					label: <span className='collapse-panel-title'>{title}</span>,
+					children,
+				},
+			]}
+		></Collapse>
 	)
 }

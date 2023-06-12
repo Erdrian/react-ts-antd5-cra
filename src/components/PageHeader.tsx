@@ -44,51 +44,41 @@ export default (props: props) => {
 	return (
 		<div className={`page-header ${footer ? 'has-footer' : ''} ${autoBread ? 'has-breadcrumb' : ''}`}>
 			{/* 面包屑 */}
-			{autoBread ? <Breadcrumb /> : <></>}
+			{autoBread && <Breadcrumb />}
 			{/* header */}
 			<div className='page-header-heading'>
 				<div className='page-header-heading-left'>
 					{/* 返回箭头 */}
-					{onBack ? (
+					{onBack && (
 						<div className='page-header-back' onClick={onBack}>
 							{backIcon}
 						</div>
-					) : (
-						<></>
 					)}
 
 					{/* 头像 */}
-					{avatar ? avatar : <></>}
+					{avatar && avatar}
 
 					{/* 标题 */}
-					<span
-						className='page-header-heading-title'
-						{...(typeof title === 'string' ? { title } : undefined)}
-					>
+					<span className='page-header-heading-title' {...(typeof title === 'string' ? { title } : {})}>
 						{title}
 					</span>
 
 					{/* 副标题 */}
-					{subTitle ? (
-						<span
-							className='page-header-heading-sub-title'
-							{...(typeof subTitle === 'string' ? { subTitle } : undefined)}
-						>
+					{subTitle && (
+						<span className='page-header-heading-sub-title' {...(typeof subTitle === 'string' ? { subTitle } : {})}>
 							{subTitle}
 						</span>
-					) : (
-						<></>
 					)}
 
 					{/* 标签 */}
-					{tags ? <span className='page-header-heading-tags'>{tags}</span> : <></>}
+					{tags && <span className='page-header-heading-tags'>{tags}</span>}
 				</div>
 				<span className='page-header-heading-extra'>{extra}</span>
 			</div>
 			{/* content */}
-			{children ? <div className='page-header-content'>{children}</div> : <></>}
+			{children && <div className='page-header-content'>{children}</div>}
 			{/* footer */}
-			{footer ? <div className='page-header-footer'>{footer}</div> : <></>}
+			{footer && <div className='page-header-footer'>{footer}</div>}
 		</div>
 	)
 }

@@ -55,7 +55,6 @@ export default ({ menuProps, collapsed }: { menuProps: MenuPropsFromAuth[]; coll
 	const navigate = useNavigate()
 	const location = useLocation()
 	let pathname = location.pathname
-	const multi = isMulti()
 	//---------------------------------------- state ----------------------------------------
 	const [openKeys, setopenKeys] = useState<string[]>([]) //当前展开的subMenu
 	const [selectedKeys, setselectedKeys] = useState<string[]>([])
@@ -71,7 +70,7 @@ export default ({ menuProps, collapsed }: { menuProps: MenuPropsFromAuth[]; coll
 	//自动收起非当前展开菜单
 	const handleOpenKeysChange: MenuProps['onOpenChange'] = (keys) => {
 		// 菜单层级大于两级,不再自动收起非当前展开菜单
-		if (multi) {
+		if (isMulti()) {
 			setopenKeys(keys)
 		} else {
 			const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1) || ''
@@ -83,15 +82,7 @@ export default ({ menuProps, collapsed }: { menuProps: MenuPropsFromAuth[]; coll
 		}
 	}
 	// 判断菜单层级是否大于两级
-	function isMulti() {
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		for (let [_, value] of Object.entries(routeMap)) {
-			if (value.length > 1) {
-				return true
-			}
-		}
-		return false
-	}
+	const isMulti = () => Object.entries(routeMap).find(([key, value]) => value.length > 1)
 	const onClick: MenuProps['onClick'] = (e) => {
 		navigate(`/${e.key}`)
 		setselectedKeys([e.key])

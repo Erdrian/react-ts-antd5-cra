@@ -14,6 +14,7 @@ const App = () => {
 		if (!localStorage.getItem('token') && path !== '/login') navigate('/login')
 	}, [])
 	useEffect(() => {
+		localStorage.getItem('URLCACHE') && localStorage.removeItem('URLCACHE')
 		localStorage.getItem('loginModalExist') && localStorage.removeItem('loginModalExist')
 	}, [])
 	return (

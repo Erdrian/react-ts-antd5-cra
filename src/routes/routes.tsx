@@ -1,8 +1,9 @@
-import { Fragment, ReactNode } from 'react'
+import { ReactNode } from 'react'
 import Login from '../page/NoNavigation/Login'
 import { Route } from 'react-router-dom'
 import Test from '../page/InNavigation/Test'
 import Detail from '../page/InNavigation/Detail'
+import NoAuth from '../page/InNavigation/NoAuth'
 //----------------------------------------  ----------------------------------------
 interface route {
 	path: string
@@ -41,5 +42,9 @@ export const routesRender = (routes: route[]): ReactNode =>
 		let { path, element, authFlag } = route
 		const auth = Object.keys(JSON.parse(localStorage.getItem('Auth') || '{}'))
 		let render = !authFlag || auth.includes(authFlag)
-		return render ? <Route key={path} path={path} element={element} /> : <Fragment key={path}></Fragment>
+		return render ? (
+			<Route key={path} path={path} element={element} />
+		) : (
+			<Route key={path} path={path} element={<NoAuth aim={route.breadcrumbName || ''} />} />
+		)
 	})

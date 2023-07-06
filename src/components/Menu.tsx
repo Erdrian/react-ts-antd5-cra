@@ -61,7 +61,7 @@ export default ({ menuProps, collapsed }: { menuProps: MenuPropsFromAuth[]; coll
 	//---------------------------------------- effect ----------------------------------------
 	// 自动展开当前路由的菜单
 	useEffect(() => {
-		let key: string = pathname.split('/').filter((i: any) => i)[0] || '/'
+		let key: string = pathname.split('/').filter((i: any) => i).join('/') || '/'
 		setselectedKeys([key])
 		setopenKeys(routeMap[key] || [])
 	}, [pathname, collapsed])
@@ -82,7 +82,7 @@ export default ({ menuProps, collapsed }: { menuProps: MenuPropsFromAuth[]; coll
 		}
 	}
 	// 判断菜单层级是否大于两级
-	const isMulti = () => Object.entries(routeMap).find(([key, value]) => value.length > 1)
+	const isMulti = () => Object.entries(routeMap).some(([key, value]) => value.length > 1)
 	const onClick: MenuProps['onClick'] = (e) => {
 		navigate(`/${e.key}`)
 		setselectedKeys([e.key])

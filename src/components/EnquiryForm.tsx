@@ -1,4 +1,4 @@
-import { useEffect, useState, forwardRef, useCallback, ReactNode, useImperativeHandle } from 'react'
+import { useEffect, useState, forwardRef, useCallback, ReactNode, useImperativeHandle, useMemo } from 'react'
 import { Table, TableProps } from 'antd'
 import fetchJson from '../utils/fetch'
 import SearchForm from './SearchForm'
@@ -35,14 +35,14 @@ export default forwardRef<any, EnquiryFormProps>((props, ref) => {
 	//---------------------------------------- state ----------------------------------------
 	const [dataSource, setdataSource] = useState([])
 	const [isLoading, setIsloading] = useState(false) //  数据是否载入中
-	const [current, setCurrent] = useState(page_history) //  当前页
+	const [page, setPage] = useState(page_history) //  当前页
 	const [pageSize, setPageSize] = useState(pageSize_history) //  每页数据条数
 	const [filter, setFilter] = useState(filter_history) //  筛选条件
 	const [total, setTotal] = useState<number>(0) //  数据总量
 
 	//---------------------------------------- effect ----------------------------------------
 	useEffect(() => {
-		getData({ filter, page: current, pageSize })
+		getData({ filter, page, pageSize })
 	}, [filter_api])
 	//---------------------------------------- 方法 ----------------------------------------
 	// 数据处理，给每个数据加上key
@@ -57,7 +57,7 @@ export default forwardRef<any, EnquiryFormProps>((props, ref) => {
 	// 表格数据获取方法
 	const getData = async (props: { filter: {}; page: number; pageSize: number }) => {
 		setIsloading(true)
-		let { filter, page, pageSize } = props
+		let { filter, page, pageSize } = props || {}
 		let _filter = { ...filter, ...(filter_api || {}) }
 		//筛选条件
 		let filterStr = ''
@@ -68,61 +68,72 @@ export default forwardRef<any, EnquiryFormProps>((props, ref) => {
 		//排序
 		let sort = sortRule ? `&column=${sortRule.column}&order=${sortRule.order}` : ''
 		let { ok, result } = await fetchJson(`${api}?pageNo=${page}&pageSize=${pageSize}${filterStr}${sort}`)
+		setIsloading(false)
 		if (ok) {
 			let { total, records } = result
 			if (!records) records = result
+			if (!total) total = result.length
 			dataProcess(records)
 			setdataSource(records)
 			setTotal(total)
-			navigate(pathname, {
-				state: { filter_history: filter, page_history: page, pageSize_history: pageSize },
-				replace: true,
-			})
+			if (pathname === window.location.pathname) {
+				navigate(pathname, {
+					state: { filter_history: filter, page_history: page, pageSize_history: pageSize },
+					replace: true,
+				})
+			}
 		}
-		setIsloading(false)
 	}
 
 	// 暴露表格数据获取方法给父组件
 	useImperativeHandle(ref, () => ({
 		getData: () => {
-			getData({ filter, page: current, pageSize })
+			getData({ filter, page, pageSize })
 		},
 	}))
 
 	// 搜素时的回调函数
 	const onSearch = useCallback((filter: {}) => {
-		setCurrent(1)
+		setPage(1)
 		setFilter(filter)
 		getData({ page: 1, pageSize, filter })
 	}, [])
 	// 重置搜索时的回调函数
 	const onReset = useCallback(() => {
-		setCurrent(1)
+		setPage(1)
 		setFilter({})
 		getData({ page: 1, pageSize, filter: {} })
 	}, [])
 
-	const pagination = {
-		total,
-		showTotal: () => `共${total}条数据`,
-		onChange: (page: number, pageSize: number) => {
-			setCurrent(page)
-			setPageSize(pageSize)
-			getData({ page, pageSize, filter })
-		},
-		current,
-		pageSize,
-	}
-
+	const pagination = useMemo(
+		() => ({
+			total,
+			showTotal: () => `共${total}条数据`,
+			onChange: (page: number, pageSize: number) => {
+				setPage(page)
+				setPageSize(pageSize)
+				getData({ page, pageSize, filter })
+			},
+			current: page,
+			pageSize,
+		}),
+		[total, page, pageSize]
+	)
 	return (
 		<div className={!detail ? 'list-table-content' : ''}>
 			{/* 搜索区 */}
 			<div className='table-search'>
 				<SearchForm formItems={searchItems || []} onSearch={onSearch} onReset={onReset} value={filter} />
 			</div>
-			{content}
+			<div style={{ marginBottom: '8px' }}>{content}</div>
+
 			{/* 表格 */}
-			<Table {...tableProps} dataSource={dataSource} pagination={pagination} loading={isLoading} />
+			<Table
+				{...tableProps}
+				dataSource={dataSource}
+				pagination={{ ...pagination, ...tableProps.pagination }}
+				loading={isLoading}
+			/>
 		</div>
 	)
 })

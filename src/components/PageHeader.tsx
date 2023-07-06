@@ -65,7 +65,10 @@ export default (props: props) => {
 
 					{/* 副标题 */}
 					{subTitle && (
-						<span className='page-header-heading-sub-title' {...(typeof subTitle === 'string' ? { subTitle } : {})}>
+						<span
+							className='page-header-heading-sub-title'
+							{...(typeof subTitle === 'string' ? { title: subTitle } : {})}
+						>
 							{subTitle}
 						</span>
 					)}

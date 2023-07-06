@@ -24,7 +24,7 @@ export default () => {
 	const breadcrumbNameMap = getBreadcrumbNameMap()
 	const { pathname } = useLocation()
 	const paths = pathname.split('/').filter((i) => i)
-//----------------------------------------  ----------------------------------------
+	//----------------------------------------  ----------------------------------------
 	const getItems = () => {
 		let items = [
 			{
@@ -42,12 +42,6 @@ export default () => {
 			let title = breadcrumbNameMap[path]
 			if (title) {
 				items.push({ path: `/${path}`, title })
-			} else {
-				path = paths.slice(0, i - 1).join('/')
-				title = breadcrumbNameMap[path]
-				let item = { path: `/${path}`, title }
-				items.splice(-1, 1, item)
-				break
 			}
 		}
 		return items

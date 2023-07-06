@@ -4,13 +4,11 @@ import {
 	Row,
 	Col,
 	Form,
-	DatePicker,
 	Radio,
 	Switch,
 	InputProps,
 	InputNumberProps,
 	SelectProps,
-	DatePickerProps,
 	RadioProps,
 	SwitchProps,
 	TreeSelectProps,
@@ -22,12 +20,16 @@ import {
 	CascaderProps,
 	Slider,
 	SliderSingleProps,
+	Checkbox,
 } from 'antd'
 import MyUpload, { MyUploadProps } from '../components/Upload'
+import MyDatePicker, { MyDatePickerProps } from '../components/DatePicker'
 import RichText from '../components/RichText'
 import SearchSelect, { SearchSelectProps } from '../components/SearchSelect'
 import divisionOptions from './aera'
 import { TextAreaProps, PasswordProps } from 'antd/es/input'
+import { ReactNode } from 'react'
+import { CheckboxGroupProps } from 'antd/es/checkbox'
 
 //----------------------------------------  ----------------------------------------
 const { Item } = Form
@@ -64,17 +66,18 @@ type formItemType =
 	| 'group'
 	| 'cascader'
 	| 'slider'
+	| 'checkbox'
 export interface formItem {
-	type: formItemType
+	type?: formItemType
 	inputOptions?:
 		| InputProps
 		| InputNumberProps
 		| SelectProps
 		| MyUploadProps
+		| MyDatePickerProps
 		| TextAreaProps
 		| PasswordProps
 		| SearchSelectProps
-		| DatePickerProps
 		| RadioProps
 		| RadioGroupProps
 		| SwitchProps
@@ -82,13 +85,22 @@ export interface formItem {
 		| CascaderProps<any>
 		| SliderSingleProps
 		| SliderRangeProps
+		| CheckboxGroupProps
 	itemOptions: FormItemProps
 	span?: number
 	group?: formItem[]
+	render?: () => ReactNode
 }
 
 export const createFormItem = (formItem: formItem, index?: number) => {
-	let { type, inputOptions, itemOptions, group } = formItem
+	let { type = 'input', inputOptions, itemOptions, group, render } = formItem
+	if (render) {
+		return (
+			<Item {...itemOptions} key={index}>
+				{render()}
+			</Item>
+		)
+	}
 	let inputNode
 	switch (type) {
 		case 'input':
@@ -96,7 +108,10 @@ export const createFormItem = (formItem: formItem, index?: number) => {
 			break
 		case 'inputNumber':
 			inputNode = (
-				<InputNumber {...(inputOptions as InputNumberProps)} style={{ width: '100%', ...inputOptions?.style }} />
+				<InputNumber
+					{...(inputOptions as InputNumberProps)}
+					style={{ width: '100%', ...inputOptions?.style }}
+				/>
 			)
 			break
 		case 'select':
@@ -117,7 +132,10 @@ export const createFormItem = (formItem: formItem, index?: number) => {
 			break
 		case 'datePicker':
 			inputNode = (
-				<DatePicker {...(inputOptions as DatePickerProps)} style={{ width: '100%', ...inputOptions?.style }} />
+				<MyDatePicker
+					{...(inputOptions as MyDatePickerProps)}
+					style={{ width: '100%', ...inputOptions?.style }}
+				/>
 			)
 			break
 		case 'radio':
@@ -138,6 +156,9 @@ export const createFormItem = (formItem: formItem, index?: number) => {
 			break
 		case 'slider':
 			inputNode = <Slider {...(inputOptions as SliderRangeProps | SliderSingleProps)} />
+			break
+		case 'checkbox':
+			inputNode = <Checkbox.Group {...(inputOptions as CheckboxGroupProps)} />
 			break
 		case 'group':
 			inputNode = (

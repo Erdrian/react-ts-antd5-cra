@@ -54,7 +54,13 @@ export const getAera = async () => {
 	}
 }
 
-const LoginForm = ({ size = 'large', onLogin }: { size?: 'large' | 'middle' | 'small'; onLogin?: Function }) => {
+const LoginForm = ({
+	size = 'large',
+	onLogin,
+}: {
+	size?: 'large' | 'middle' | 'small'
+	onLogin?: Function
+}) => {
 	//---------------------------------------- props ----------------------------------------
 	const [form] = Form.useForm()
 	//---------------------------------------- state ----------------------------------------
@@ -80,7 +86,7 @@ const LoginForm = ({ size = 'large', onLogin }: { size?: 'large' | 'middle' | 's
 	const onFinish = async (values: loginFrom) => {
 		setIsloading(true)
 		let body: loginBody = { ...values, checkKey: captchaKey }
-		let { ok, msg, result } = await fetchJson('/sys/login', {
+		let { ok, msg, result } = await fetchJson('/api/login', {
 			method: 'post',
 			body: JSON.stringify(body),
 		})
@@ -103,7 +109,7 @@ const LoginForm = ({ size = 'large', onLogin }: { size?: 'large' | 'middle' | 's
 	//获取图形验证码
 	const getIdentify = async () => {
 		const captchaKey = Math.floor(Math.random() * 1000000).toString() //图形验证码的KEY
-		let { ok, result } = await fetchJson('/sys/randomImage/' + captchaKey)
+		let { ok, result } = await fetchJson('/api/getCaptcha')
 		if (ok) {
 			setIdentify(result)
 			setcaptchaKey(captchaKey)
@@ -171,7 +177,7 @@ const LoginForm = ({ size = 'large', onLogin }: { size?: 'large' | 'middle' | 's
 
 					<img
 						alt='验证码'
-						style={{ width: 'auto', height: '39px', cursor: 'pointer' }}
+						style={{ width: 'auto', height: '39px', cursor: 'pointer', borderRadius: '4px' }}
 						src={identify}
 						onClick={getIdentify}
 					/>
@@ -179,7 +185,14 @@ const LoginForm = ({ size = 'large', onLogin }: { size?: 'large' | 'middle' | 's
 			</Form.Item>
 
 			<Form.Item>
-				<Button type='primary' htmlType='submit' className='login-form-button' block loading={isLoading} size='large'>
+				<Button
+					type='primary'
+					htmlType='submit'
+					className='login-form-button'
+					block
+					loading={isLoading}
+					size='large'
+				>
 					登录
 				</Button>
 			</Form.Item>

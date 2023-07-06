@@ -3,8 +3,8 @@ import LoginForm from '../components/LoginForm'
 import '../style/LoginModal.css'
 import errorSvg from '../assets/401.svg'
 //----------------------------------------  ----------------------------------------
-// export const BASE: string = 'http://localhost:8080'
-export const BASE = 'https://devsli.nbmydigit.com/api'
+export const BASE: string = 'http://localhost:9999'
+// export const BASE = 'https://devsli.nbmydigit.com/api'
 
 export default async function fetchJson(URL: string, options?: RequestInit) {
 	const createLoginModal = () => {
@@ -45,17 +45,11 @@ export default async function fetchJson(URL: string, options?: RequestInit) {
 		if (headers) {
 			defaultHeaders = { ...defaultHeaders, ...headers }
 		}
-		let Options: RequestInit = { ...options, headers: { ...defaultHeaders } }
+		let Options: RequestInit = { ...options, headers: { ...defaultHeaders }, credentials: 'include' }
 		let res = await fetch(BASE + URL, Options)
-		let {
-			success: ok,
-			message: msg,
-			result,
-			code,
-			timestamp,
-		} = (await res.json()) || {
-			success: false,
-			message: '数据解析失败',
+		let { ok, msg, result, code, timestamp } = (await res.json()) || {
+			ok: false,
+			msg: '数据解析失败',
 			result: null,
 		}
 		if (code === 401) {

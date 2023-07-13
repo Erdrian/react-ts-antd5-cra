@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Form, Input, Button, message } from 'antd'
+import { Form, Input, Button, notification } from 'antd'
 import { UserOutlined, LockOutlined, SafetyCertificateOutlined } from '@ant-design/icons'
 import fetchJson from '../utils/fetch'
 import { MenuPropsFromAuth } from './Menu'
@@ -11,7 +11,7 @@ interface loginFrom {
 	captcha: string
 }
 interface loginBody extends loginFrom {
-	checkKey: string
+	captchaKey: string
 	loginKey?: string
 }
 type areaFromInterface = {
@@ -85,8 +85,8 @@ const LoginForm = ({
 	//登录请求
 	const onFinish = async (values: loginFrom) => {
 		setIsloading(true)
-		let body: loginBody = { ...values, checkKey: captchaKey }
-		let { ok, msg, result } = await fetchJson('/api/login', {
+		let body: loginBody = { ...values, captchaKey }
+		let { ok, msg, result } = await fetchJson('/login', {
 			method: 'post',
 			body: JSON.stringify(body),
 		})
@@ -96,12 +96,17 @@ const LoginForm = ({
 			getIdentify()
 			form.resetFields(['captcha'])
 		} else {
-			let { token, sysAllDictItems, userInfo } = result
-			localStorage.setItem('DictItems', JSON.stringify(sysAllDictItems))
+			let { token, userInfo } = result
+			// localStorage.setItem('DictItems', JSON.stringify(sysAllDictItems))
 			localStorage.setItem('UserInfo', JSON.stringify(userInfo))
 			localStorage.setItem('token', token)
-			await getAuth()
-			await getAera()
+			// await getAuth()
+			// await getAera()
+			notification.success({
+				message: '登录成功',
+				description: `欢迎回来，${userInfo.realname}`,
+				closeIcon: false,
+			})
 			onLogin?.()
 		}
 	}
@@ -109,12 +114,10 @@ const LoginForm = ({
 	//获取图形验证码
 	const getIdentify = async () => {
 		const captchaKey = Math.floor(Math.random() * 1000000).toString() //图形验证码的KEY
-		let { ok, result } = await fetchJson('/api/getCaptcha')
+		let { ok, result } = await fetchJson('/login/getCaptcha?captchaKey=' + captchaKey)
 		if (ok) {
 			setIdentify(result)
 			setcaptchaKey(captchaKey)
-		} else {
-			message.error('获取验证码失败，请重试')
 		}
 	}
 

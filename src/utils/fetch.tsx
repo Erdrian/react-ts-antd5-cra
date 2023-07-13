@@ -3,7 +3,7 @@ import LoginForm from '../components/LoginForm'
 import '../style/LoginModal.css'
 import errorSvg from '../assets/401.svg'
 //----------------------------------------  ----------------------------------------
-export const BASE: string = 'http://localhost:9999'
+export const BASE: string = 'http://localhost:9999/api'
 // export const BASE = 'https://devsli.nbmydigit.com/api'
 
 export default async function fetchJson(URL: string, options?: RequestInit) {

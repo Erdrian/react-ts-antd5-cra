@@ -2,12 +2,13 @@ import { MenuUnfoldOutlined, MenuFoldOutlined, LogoutOutlined, SettingOutlined }
 import { Avatar, Dropdown, Form, Layout, message, Modal, Space } from 'antd'
 import { useState, createElement } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
-import Icon from './Icon'
 import Mymenu from './Menu'
 import '../style/Layout.css'
 import fetchJson from '../utils/fetch'
 import { createFormItem, formItem } from '../utils/createFormItem'
 import { password } from '../utils/regexp'
+import defalutAvatar from '../assets/cxy.jpg'
+import logoImg from '../assets/logo.svg'
 //----------------------------------------  ----------------------------------------
 const HeaderRight = () => {
 	//---------------------------------------- props ----------------------------------------
@@ -130,13 +131,13 @@ const HeaderRight = () => {
 			<Space size='small' className='layout-header-right'>
 				<Dropdown menu={{ items }} placement='bottomLeft'>
 					<div>
-						<Avatar size={36} src={userInfo.avatar || ''} className='user-avatar' />
+						<Avatar size={36} src={userInfo.avatar || defalutAvatar} className='user-avatar' />
 						<span className='user-name'>{userInfo.realname || null}</span>
 					</div>
 				</Dropdown>
 				<Modal title='修改密码' open={open} onOk={submit} onCancel={onCancel} destroyOnClose>
 					<Form labelCol={{ span: 4 }} wrapperCol={{ span: 20 }} form={form} preserve={false}>
-						{formItems.map((formItem, i) => createFormItem(formItem, i))}
+						{formItems.map(createFormItem)}
 					</Form>
 				</Modal>
 			</Space>
@@ -148,21 +149,23 @@ export default () => {
 	const { Header, Sider, Content } = Layout
 	const menuProps = JSON.parse(localStorage.getItem('Menu') || '[]')
 	const navigate = useNavigate()
-	const logo = <Icon type='icon-fengkong' className='logo-icon' />
-	const title = '模板系统'
+	const logo = <img className='logo-icon' alt='logo' src={logoImg} />
+	const title = 'Ant-Design'
 	//---------------------------------------- state ----------------------------------------
 	const [collapsed, setcollapased] = useState(false)
+	const [showTitle, setshowTitle] = useState(true)
+	//
 	return (
 		<Layout style={{ minHeight: '100vh', minWidth: '1200px' }}>
-			<Sider trigger={null} collapsible collapsed={collapsed} width={250}>
+			<Sider trigger={null} collapsible collapsed={collapsed}>
 				<div
-					className='logo'
+					className={`logo ${showTitle ? '' : 'title-hidden'}`}
 					onClick={() => {
 						navigate('/')
 					}}
 				>
 					{logo}
-					<span className='logo-title'>{title}</span>
+					{<span className='logo-title '>{title}</span>}
 				</div>
 				<Mymenu menuProps={menuProps} collapsed={collapsed} />
 			</Sider>
@@ -172,6 +175,7 @@ export default () => {
 						className: 'trigger',
 						onClick: () => {
 							setcollapased(!collapsed)
+							setshowTitle(!showTitle)
 						},
 					})}
 					<HeaderRight />

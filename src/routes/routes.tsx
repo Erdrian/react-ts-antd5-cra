@@ -4,6 +4,7 @@ import { Route } from 'react-router-dom'
 import Test from '../page/InNavigation/Test'
 import Detail from '../page/InNavigation/Detail'
 import NoAuth from '../page/InNavigation/NoAuth'
+import Index from '../page/InNavigation/Index'
 //----------------------------------------  ----------------------------------------
 interface route {
 	path: string
@@ -21,9 +22,9 @@ export const NoNavigationRoutes: route[] = [
 ]
 export const InNavigationRoutes: route[] = [
 	{
-		path: 'discoveryItem',
-		element: <Test />,
-		breadcrumbName: '发现项列表',
+		path: '/',
+		element: <Index />,
+		breadcrumbName: '首页',
 	},
 	{
 		path: 'discoveryItem/detail/:id',

@@ -5,6 +5,7 @@ import Test from '../page/InNavigation/Test'
 import Detail from '../page/InNavigation/Detail'
 import NoAuth from '../page/InNavigation/NoAuth'
 import Index from '../page/InNavigation/Index'
+import OrgCodeValid from '../page/NoNavigation/OrgCodeValid'
 //----------------------------------------  ----------------------------------------
 interface route {
 	path: string
@@ -17,6 +18,11 @@ export const NoNavigationRoutes: route[] = [
 	{
 		path: 'login',
 		element: <Login />,
+		breadcrumbName: null,
+	},
+	{
+		path: 'orgCodeValid',
+		element: <OrgCodeValid />,
 		breadcrumbName: null,
 	},
 ]

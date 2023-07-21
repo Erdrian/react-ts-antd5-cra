@@ -21,6 +21,7 @@ import {
 	Slider,
 	SliderSingleProps,
 	Checkbox,
+	Button,
 } from 'antd'
 import MyUpload, { MyUploadProps } from '../components/Upload'
 import MyDatePicker, { MyDatePickerProps } from '../components/DatePicker'
@@ -30,6 +31,8 @@ import divisionOptions from './aera'
 import { TextAreaProps, PasswordProps } from 'antd/es/input'
 import { ReactNode } from 'react'
 import { CheckboxGroupProps } from 'antd/es/checkbox'
+import FormTable, { FormTableProps } from '../components/FormTable'
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons'
 
 //----------------------------------------  ----------------------------------------
 const { Item } = Form
@@ -67,9 +70,12 @@ type formItemType =
 	| 'cascader'
 	| 'slider'
 	| 'checkbox'
+	| 'formTable'
+	| 'list'
 export interface formItem {
 	type?: formItemType
 	inputOptions?:
+		| FormTableProps
 		| InputProps
 		| InputNumberProps
 		| SelectProps
@@ -90,10 +96,11 @@ export interface formItem {
 	span?: number
 	group?: formItem[]
 	render?: () => ReactNode
+	listFormItems?: formItem[]
 }
 
 export const createFormItem = (formItem: formItem, index?: number) => {
-	let { type = 'input', inputOptions, itemOptions, group, render } = formItem
+	let { type = 'input', inputOptions, itemOptions, group, render, listFormItems } = formItem
 	if (render) {
 		return (
 			<Item {...itemOptions} key={index}>
@@ -142,7 +149,7 @@ export const createFormItem = (formItem: formItem, index?: number) => {
 			inputNode = <Radio.Group {...(inputOptions as RadioProps & RadioGroupProps)} />
 			break
 		case 'switch':
-			itemOptions = { ...itemOptions, valuePropName: 'checked' }
+			itemOptions = { initialValue: false, ...itemOptions, valuePropName: 'checked' }
 			inputNode = <Switch {...(inputOptions as SwitchProps)} />
 			break
 		case 'treeSelect':
@@ -160,6 +167,9 @@ export const createFormItem = (formItem: formItem, index?: number) => {
 		case 'checkbox':
 			inputNode = <Checkbox.Group {...(inputOptions as CheckboxGroupProps)} />
 			break
+		case 'formTable':
+			inputNode = <FormTable {...(inputOptions as FormTableProps)} />
+			break
 		case 'group':
 			inputNode = (
 				<Row gutter={8}>
@@ -176,6 +186,40 @@ export const createFormItem = (formItem: formItem, index?: number) => {
 					})}
 				</Row>
 			)
+			break
+		case 'list':
+			inputNode = (
+				<Form.List name={itemOptions.name || ''}>
+					{(fields, operation) => (
+						<>
+							{fields.map((field) => (
+								<div
+									key={field.key}
+									style={{ display: 'flex', width: '100%', gap: '8px', alignItems: 'baseline' }}
+								>
+									{listFormItems?.map((listFormItem) => {
+										let listItemName = listFormItem?.itemOptions.name
+										return createFormItem({
+											...listFormItem,
+											itemOptions: {
+												...field,
+												...listFormItem?.itemOptions,
+												name: listItemName ? [field.name, listItemName] : field.name,
+												style: { flex: '1' },
+											},
+										} as formItem)
+									})}
+									<MinusCircleOutlined onClick={() => operation.remove(field.name)} />
+								</div>
+							))}
+							<Button type='dashed' onClick={() => operation.add()} block icon={<PlusOutlined />}>
+								添加
+							</Button>
+						</>
+					)}
+				</Form.List>
+			)
+			delete itemOptions.name
 			break
 		default:
 			inputNode = <Input {...(inputOptions as InputProps)} />

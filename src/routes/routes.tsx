@@ -1,11 +1,11 @@
 import { ReactNode } from 'react'
 import Login from '../page/NoNavigation/Login'
-import { Route } from 'react-router-dom'
+import { Navigate, Route } from 'react-router-dom'
 import Test from '../page/InNavigation/Test'
 import Detail from '../page/InNavigation/Detail'
 import NoAuth from '../page/InNavigation/NoAuth'
-import Index from '../page/InNavigation/Index'
 import OrgCodeValid from '../page/NoNavigation/OrgCodeValid'
+import User from '../page/InNavigation/sys/User'
 //----------------------------------------  ----------------------------------------
 interface route {
 	path: string
@@ -27,10 +27,16 @@ export const NoNavigationRoutes: route[] = [
 	},
 ]
 export const InNavigationRoutes: route[] = [
+	//---------------------------------------- sys ----------------------------------------
 	{
-		path: '/',
-		element: <Index />,
-		breadcrumbName: '首页',
+		path: '/sys',
+		element: <Navigate to='/sys/user' />,
+		breadcrumbName: '系统管理',
+	},
+	{
+		path: '/sys/user',
+		element: <User />,
+		breadcrumbName: '用户管理',
 	},
 	{
 		path: 'discoveryItem/detail/:id',

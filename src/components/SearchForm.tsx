@@ -28,17 +28,20 @@ export default ({ formItems, onSearch, onReset, value }: searchFormProps) => {
 	return (
 		<Form className='table-search-form' form={form} labelCol={{ span: 5 }} wrapperCol={{ span: 19 }}>
 			<Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32, xl: 24, xxl: 16 }}>
-				{formItems.map((item, index) =>
-					index > limit ? (
-						<Fragment key={index} />
-					) : (
-						<Col xs={8} sm={8} md={8} lg={6} xl={6} xxl={6} key={index}>
-							{createFormItem(item)}
-						</Col>
-					)
+				{formItems.map(
+					(item, index) =>
+						index < limit && (
+							<Col xs={8} sm={8} md={8} lg={6} xl={6} xxl={6} key={index}>
+								{createFormItem(item)}
+							</Col>
+						)
 				)}
 				<Col className='table-search-action'>
-					<Button type='primary' style={{ marginRight: '8px' }} onClick={() => onSearch(form.getFieldsValue(true))}>
+					<Button
+						type='primary'
+						style={{ marginRight: '8px' }}
+						onClick={() => onSearch(form.getFieldsValue(true))}
+					>
 						查询
 					</Button>
 					<Button

@@ -67,31 +67,35 @@ export default forwardRef<any, EnquiryFormProps>((props, ref) => {
 		}
 		//排序
 		let sort = sortRule ? `&column=${sortRule.column}&order=${sortRule.order}` : ''
-		let { ok, result } = await fetchJson(`${api}?pageNo=${page}&pageSize=${pageSize}${filterStr}${sort}`)
-		setIsloading(false)
-		if (ok) {
-			let { total, records } = result
-			if (!records) records = result
-			if (!total) total = result.length
-			dataProcess(records)
-			setdataSource(records)
-			setTotal(total)
-			if (pathname === window.location.pathname) {
-				navigate(pathname, {
-					state: { filter_history: filter, page_history: page, pageSize_history: pageSize },
-					replace: true,
-				})
-			}
-		}
+		fetchJson(`${api}?page=${page}&pageSize=${pageSize}${filterStr}${sort}`).then(
+			({ result }) => {
+				setIsloading(false)
+				let { total, records } = result
+				if (!records) records = result
+				if (!total) total = result.length
+				dataProcess(records)
+				setdataSource(records)
+				setTotal(total)
+				if (pathname === window.location.pathname) {
+					navigate(pathname, {
+						state: { filter_history: filter, page_history: page, pageSize_history: pageSize },
+						replace: true,
+					})
+				}
+			},
+			() => setIsloading(false)
+		)
 	}
 
 	// 暴露表格数据获取方法给父组件
 	useImperativeHandle(ref, () => ({
-		getData: () => {
-			getData({ filter, page, pageSize })
+		getData: (props: { filter: any; page: number; pageSize: number }) => {
+			let _filter = props?.filter || filter
+			let _page = props?.page || page
+			let _pageSize = props?.pageSize || pageSize
+			getData({ filter: _filter, page: _page, pageSize: _pageSize })
 		},
 	}))
-
 	// 搜素时的回调函数
 	const onSearch = useCallback((filter: {}) => {
 		setPage(1)

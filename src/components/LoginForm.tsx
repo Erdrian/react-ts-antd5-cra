@@ -6,7 +6,7 @@ import { MenuPropsFromAuth } from './Menu'
 import '../style/LoginForm.css'
 //---------------------------------------- 类型 ----------------------------------------
 interface loginFrom {
-	username: string
+	userName: string
 	password: string
 	captcha: string
 }
@@ -83,32 +83,35 @@ const LoginForm = ({
 	}, [captchaKey])
 	//---------------------------------------- 方法 ----------------------------------------
 	//登录请求
-	const onFinish = async (values: loginFrom) => {
+	const onFinish = (values: loginFrom) => {
 		setIsloading(true)
 		let body: loginBody = { ...values, captchaKey }
-		let { ok, msg, result } = await fetchJson('/login', {
+		fetchJson('/login', {
 			method: 'post',
 			body: JSON.stringify(body),
-		})
-		setIsloading(false)
-		if (!ok) {
-			setLoginError(msg)
-			getIdentify()
-			form.resetFields(['captcha'])
-		} else {
-			let { token, userInfo } = result
-			// localStorage.setItem('DictItems', JSON.stringify(sysAllDictItems))
-			localStorage.setItem('UserInfo', JSON.stringify(userInfo))
-			localStorage.setItem('token', token)
-			// await getAuth()
-			// await getAera()
-			notification.success({
-				message: '登录成功',
-				description: `欢迎回来，${userInfo.realname}`,
-				closeIcon: false,
-			})
-			onLogin?.()
-		}
+		}).then(
+			({ result }) => {
+				setIsloading(false)
+				let { token, userInfo } = result
+				// localStorage.setItem('DictItems', JSON.stringify(sysAllDictItems))
+				localStorage.setItem('UserInfo', JSON.stringify(userInfo))
+				localStorage.setItem('token', token)
+				// await getAuth()
+				// await getAera()
+				notification.success({
+					message: '登录成功',
+					description: `欢迎回来，${userInfo.realname}`,
+					closeIcon: false,
+				})
+				onLogin?.()
+			},
+			(msg) => {
+				setIsloading(false)
+				setLoginError(msg)
+				getIdentify()
+				form.resetFields(['captcha'])
+			}
+		)
 	}
 
 	//获取图形验证码
@@ -124,7 +127,7 @@ const LoginForm = ({
 	return (
 		<Form form={form} name='normal_login' className='login-form' onFinish={onFinish} size={size}>
 			<Form.Item
-				name='username'
+				name='userName'
 				rules={[
 					{
 						required: true,

@@ -60,6 +60,7 @@ export default async function fetchJson(URL: string, options?: RequestInit) {
 		}
 		if (!ok) {
 			message.error(msg)
+			return Promise.reject(msg)
 		}
 		return { ok, result, msg, code, timestamp }
 	} catch (e) {

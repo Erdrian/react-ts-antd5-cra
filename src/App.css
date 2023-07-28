@@ -25,3 +25,12 @@
 	cursor: pointer;
 	margin-right: 16px;
 }
+/* 统计数据默认靠右 */
+.ant-statistic {
+	text-align: right;
+}
+/* 表格内按钮优化 */
+.ant-table .ant-btn.ant-btn-link {
+	padding-left: 0;
+	padding-right: 0;
+}

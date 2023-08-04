@@ -9,6 +9,8 @@
 	align-items: center;
 }
 .logo-icon {
+	margin: 0 auto;
+	width: auto;
 	height: 100%;
 }
 .logo-title {

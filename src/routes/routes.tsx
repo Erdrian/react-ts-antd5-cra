@@ -6,6 +6,7 @@ import Detail from '../page/InNavigation/Detail'
 import NoAuth from '../page/InNavigation/NoAuth'
 import OrgCodeValid from '../page/NoNavigation/OrgCodeValid'
 import User from '../page/InNavigation/sys/User'
+import Role from '../page/InNavigation/sys/Role'
 //----------------------------------------  ----------------------------------------
 interface route {
 	path: string
@@ -37,6 +38,11 @@ export const InNavigationRoutes: route[] = [
 		path: '/sys/user',
 		element: <User />,
 		breadcrumbName: '用户管理',
+	},
+	{
+		path: '/sys/role',
+		element: <Role />,
+		breadcrumbName: '角色管理',
 	},
 	{
 		path: 'discoveryItem/detail/:id',

@@ -8,7 +8,7 @@ import fetchJson from '../utils/fetch'
 import { createFormItem, formItem } from '../utils/createFormItem'
 import { password } from '../utils/regexp'
 import defalutAvatar from '../assets/cxy.jpg'
-import logoImg from '../assets/logo.svg'
+import logoImg from '../assets/logo_white.svg'
 //----------------------------------------  ----------------------------------------
 const HeaderRight = () => {
 	//---------------------------------------- props ----------------------------------------
@@ -150,7 +150,7 @@ export default () => {
 	const menuProps = JSON.parse(localStorage.getItem('Menu') || '[]')
 	const navigate = useNavigate()
 	const logo = <img className='logo-icon' alt='logo' src={logoImg} />
-	const title = 'Ant-Design'
+	const title = process.env.REACT_APP_NAME
 	//---------------------------------------- state ----------------------------------------
 	const [collapsed, setcollapased] = useState(false)
 	const [showTitle, setshowTitle] = useState(true)
@@ -165,7 +165,7 @@ export default () => {
 					}}
 				>
 					{logo}
-					{<span className='logo-title '>{title}</span>}
+					{title && <span className='logo-title '>{title}</span>}
 				</div>
 				<Mymenu menuProps={menuProps} collapsed={collapsed} />
 			</Sider>

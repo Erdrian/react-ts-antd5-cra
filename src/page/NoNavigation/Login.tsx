@@ -4,10 +4,10 @@ import { Divider, Space } from 'antd'
 import { GithubOutlined, GoogleOutlined } from '@ant-design/icons'
 import '../../style/Login.css'
 import { useNavigate } from 'react-router-dom'
-import logoSrc from '../../assets/logo.svg'
+import logoSrc from '../../assets/logo_black.svg'
 
 const logo = <img alt='logo' src={logoSrc} />
-const title = 'Ant-Design'
+const title = process.env.REACT_APP_NAME
 const desc = '用户登录'
 // eslint-disable-next-line import/no-anonymous-default-export
 export default () => {

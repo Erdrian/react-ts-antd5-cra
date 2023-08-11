@@ -26,9 +26,9 @@ export default async function fetchJson(URL: string, options?: RequestInit) {
 							size='middle'
 							onLogin={() => {
 								Modal.destroyAll()
-								message.success('登录成功')
+								message.success('已重新登录')
 								localStorage.removeItem('loginModalExist')
-								window.location.reload()
+								// window.location.reload()
 							}}
 						/>
 					</Col>
@@ -46,7 +46,7 @@ export default async function fetchJson(URL: string, options?: RequestInit) {
 		}
 		let Options: RequestInit = { ...options, headers: { ...defaultHeaders }, credentials: 'include' }
 		let res = await fetch(BASE + URL, Options)
-		let { ok, msg, result, code, timestamp } = (await res.json()) || {
+		let { ok, msg, result, code } = (await res.json()) || {
 			ok: false,
 			msg: '数据解析失败',
 			result: null,
@@ -55,13 +55,13 @@ export default async function fetchJson(URL: string, options?: RequestInit) {
 			if (path !== '/login' && token && !(localStorage.getItem('loginModalExist') === 'true')) {
 				createLoginModal()
 			}
-			return { ok: false }
+			return Promise.reject(msg)
 		}
 		if (!ok) {
 			message.error(msg)
 			return Promise.reject(msg)
 		}
-		return { ok, result, msg, code, timestamp }
+		return { ok, result, msg, code }
 	} catch (e) {
 		message.error('服务器连接失败，请稍后再试')
 		console.log(e)

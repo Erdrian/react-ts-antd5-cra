@@ -95,6 +95,7 @@ export default forwardRef<any, EnquiryFormProps>((props, ref) => {
 			let _pageSize = props?.pageSize || pageSize
 			getData({ filter: _filter, page: _page, pageSize: _pageSize })
 		},
+		data: dataSource,
 	}))
 	// 搜素时的回调函数
 	const onSearch = useCallback((filter: {}) => {

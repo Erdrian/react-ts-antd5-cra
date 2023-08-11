@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Form, Input, Button, notification } from 'antd'
+import { Form, Input, Button } from 'antd'
 import { UserOutlined, LockOutlined, SafetyCertificateOutlined } from '@ant-design/icons'
 import fetchJson from '../utils/fetch'
 import { MenuPropsFromAuth } from './Menu'
@@ -59,7 +59,7 @@ const LoginForm = ({
 	onLogin,
 }: {
 	size?: 'large' | 'middle' | 'small'
-	onLogin?: Function
+	onLogin?: (result: { token: string; userInfo: any }) => void
 }) => {
 	//---------------------------------------- props ----------------------------------------
 	const [form] = Form.useForm()
@@ -92,18 +92,12 @@ const LoginForm = ({
 		}).then(
 			({ result }) => {
 				setIsloading(false)
-				let { token, userInfo } = result
-				// localStorage.setItem('DictItems', JSON.stringify(sysAllDictItems))
+				let { token, userInfo, authorizes, navigation } = result
 				localStorage.setItem('UserInfo', JSON.stringify(userInfo))
+				localStorage.setItem('Authorizes', JSON.stringify(authorizes))
+				localStorage.setItem('Navigation', JSON.stringify(navigation))
 				localStorage.setItem('token', token)
-				// await getAuth()
-				// await getAera()
-				notification.success({
-					message: '登录成功',
-					description: `欢迎回来，${userInfo.realname}`,
-					closeIcon: false,
-				})
-				onLogin?.()
+				onLogin?.(result)
 			},
 			(msg) => {
 				setIsloading(false)

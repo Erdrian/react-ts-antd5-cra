@@ -1,9 +1,9 @@
-import { Button, Divider, Form, Modal, Space, TableProps, message } from 'antd'
+import { Button, Divider, Form, Modal, Space, TableProps, Tag, message } from 'antd'
 import EnquiryForm from '../../../components/EnquiryForm'
 import PageHeader from '../../../components/PageHeader'
 import { createFormItem, formItem } from '../../../utils/createFormItem'
 import { password } from '../../../utils/regexp'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import fetchJson from '../../../utils/fetch'
 import PopConfirmDelete from '../../../components/PopConfirmDelete'
 import BaseList from '../../../interface/BaseList'
@@ -80,6 +80,8 @@ interface userList extends BaseList {
 	phone: string
 	status: string
 	avtar: string
+	roles: { roleName: string; id: string }[]
+	roleIds?: string[]
 }
 export default () => {
 	const table = useRef<{ getData: Function }>()
@@ -87,6 +89,12 @@ export default () => {
 	//----------------------------------------  ----------------------------------------
 	const [open, setopen] = useState(false)
 	const [edit, setedit] = useState(false)
+	const [roles, setroles] = useState<any[]>([])
+	//----------------------------------------  ----------------------------------------
+	useEffect(() => {
+		getRoles()
+	}, [])
+
 	//----------------------------------------  ----------------------------------------
 	const closeModal = () => {
 		form.resetFields()
@@ -96,7 +104,9 @@ export default () => {
 	const onEdit = (data: userList) => {
 		setedit(true)
 		setopen(true)
-		form.setFieldsValue(data)
+		let _data = { ...data }
+		_data.roleIds = _data.roles.map((ele) => ele.id)
+		form.setFieldsValue(_data)
 	}
 	const submit = () => {
 		form.validateFields().then((values) => {
@@ -115,6 +125,16 @@ export default () => {
 	const getTableData = () => {
 		table.current?.getData()
 	}
+
+	const getRoles = () => {
+		fetchJson('/role/list?pageSize=99').then((values) => {
+			let _roleOptions = values.result.records.map(({ roleName, id }: any) => ({
+				value: id,
+				label: roleName,
+			}))
+			setroles(_roleOptions)
+		})
+	}
 	//----------------------------------------  ----------------------------------------
 	const columns: TableProps<userList>['columns'] = [
 		{
@@ -130,8 +150,14 @@ export default () => {
 			title: '电话',
 		},
 		{
-			dataIndex: 'createBy',
-			title: '创建者',
+			dataIndex: 'roles',
+			title: '角色',
+			render: (value) =>
+				value?.map((ele: any) => (
+					<Tag key={ele.id} color='blue'>
+						{ele.roleName}
+					</Tag>
+				)),
 		},
 		{
 			title: '操作',
@@ -148,7 +174,7 @@ export default () => {
 	const searchItems: formItem[] = [
 		{
 			itemOptions: {
-				name: 'username',
+				name: 'userName',
 				label: '用户名',
 			},
 		},
@@ -170,12 +196,25 @@ export default () => {
 			itemOptions: {
 				name: 'realName',
 				label: '使用人',
+				rules: [{ required: true }],
 			},
 		},
 		{
 			itemOptions: {
 				name: 'phone',
 				label: '手机',
+			},
+		},
+		{
+			type: 'select',
+			itemOptions: {
+				name: 'roleIds',
+				label: '角色',
+				rules: [{ required: true }],
+			},
+			inputOptions: {
+				mode: 'multiple',
+				options: roles,
 			},
 		},
 	]

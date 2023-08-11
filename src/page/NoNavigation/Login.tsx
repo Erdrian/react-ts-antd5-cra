@@ -1,6 +1,6 @@
 import Particles from '../../components/Particles'
 import LoginForm from '../../components/LoginForm'
-import { Divider, Space } from 'antd'
+import { Divider, Space, notification } from 'antd'
 import { GithubOutlined, GoogleOutlined } from '@ant-design/icons'
 import '../../style/Login.css'
 import { useNavigate } from 'react-router-dom'
@@ -9,7 +9,7 @@ import logoSrc from '../../assets/logo_black.svg'
 const logo = <img alt='logo' src={logoSrc} />
 const title = process.env.REACT_APP_NAME
 const desc = '用户登录'
-// eslint-disable-next-line import/no-anonymous-default-export
+
 export default () => {
 	const navigate = useNavigate()
 	return (
@@ -33,7 +33,12 @@ export default () => {
 							<div className='form-login-desc'>{desc}</div>
 						</div>
 						<LoginForm
-							onLogin={() => {
+							onLogin={(result) => {
+								notification.success({
+									message: '登录成功',
+									description: `欢迎回来，${result.userInfo.realname}`,
+									closeIcon: false,
+								})
 								navigate('/')
 							}}
 						/>

@@ -147,7 +147,7 @@ const HeaderRight = () => {
 export default () => {
 	//---------------------------------------- props ----------------------------------------
 	const { Header, Sider, Content } = Layout
-	const menuProps = JSON.parse(localStorage.getItem('Menu') || '[]')
+	const menuProps = JSON.parse(localStorage.getItem('Navigation') || '[]')
 	const navigate = useNavigate()
 	const logo = <img className='logo-icon' alt='logo' src={logoImg} />
 	const title = process.env.REACT_APP_NAME
@@ -157,7 +157,7 @@ export default () => {
 	//
 	return (
 		<Layout style={{ minHeight: '100vh', minWidth: '1200px' }}>
-			<Sider trigger={null} collapsible collapsed={collapsed}>
+			<Sider trigger={null} collapsible collapsed={collapsed} width={250}>
 				<div
 					className={`logo ${showTitle ? '' : 'title-hidden'}`}
 					onClick={() => {

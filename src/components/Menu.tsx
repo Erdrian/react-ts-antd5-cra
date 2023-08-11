@@ -6,10 +6,8 @@ import { useLocation, useNavigate } from 'react-router-dom'
 export interface MenuPropsFromAuth {
 	id: string
 	path: string | null
-	meta: {
-		icon?: string
-		title: string
-	}
+	icon?: string
+	title: string
 	children?: MenuPropsFromAuth[]
 }
 type MenuItem = Required<MenuProps>['items'][number]
@@ -18,12 +16,7 @@ type MenuItem = Required<MenuProps>['items'][number]
 const getMenuItems = (child: MenuPropsFromAuth[], subMenukeys?: string[]): MenuItem[] => {
 	if (!child) return []
 	return child.map((item: MenuPropsFromAuth): MenuItem => {
-		let {
-			id,
-			path,
-			meta: { icon, title },
-			children,
-		} = item
+		let { id, path, icon, title, children } = item
 		let key = path ? path.slice(1) : id
 		let ICON = icon ? <Icon type={icon} /> : undefined
 		let parentKeys: string[] = subMenukeys || []
@@ -61,7 +54,11 @@ export default ({ menuProps, collapsed }: { menuProps: MenuPropsFromAuth[]; coll
 	//---------------------------------------- effect ----------------------------------------
 	// 自动展开当前路由的菜单
 	useEffect(() => {
-		let key: string = pathname.split('/').filter((i: any) => i).join('/') || '/'
+		let key: string =
+			pathname
+				.split('/')
+				.filter((i: any) => i)
+				.join('/') || '/'
 		setselectedKeys([key])
 		setopenKeys(routeMap[key] || [])
 	}, [pathname, collapsed])
